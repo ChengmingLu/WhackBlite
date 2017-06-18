@@ -9,16 +9,15 @@
 import Foundation
 import SpriteKit
 import UIKit
-import QuartzCore
 //import CoreGraphics
 
 class Block {
     enum type: UInt32 {
         case WTL
         case WTR
-        case WBL
         case WBR
-        private static let count: type.RawValue = {
+        case WBL
+        static let count: type.RawValue = {
             var maxValue: UInt32 = 0
             while let _ = type(rawValue: maxValue) {
                 maxValue += 1
@@ -37,6 +36,7 @@ class Block {
     var blockType: type
     var cornerRadiusSetting: CGFloat = 0
     var size: CGFloat
+    var canRotate: Bool
 
     init(initRect: CGRect, typeOfBlock: type) {
         screenScale = UIScreen.main.bounds
@@ -47,6 +47,7 @@ class Block {
         layer.masksToBounds = true
         blockType = typeOfBlock
         size = initRect.size.width
+        canRotate = true
     }
     
     func setTypeAndRedraw(typeToSet: type) {
@@ -95,7 +96,13 @@ class Block {
         //layer.transform = CATransform3DMakeScale(0.6, 0.6, 1)
     }
     
+    //rotate the block 90 degrees CW and change its type upon completion
     func rotateClockwise90() {
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
+            self.blockType = type(rawValue: (self.blockType.rawValue + 1) % type.count)!
+        }
         layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)
+        CATransaction.commit()
     }
 }

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import QuartzCore
 import UIKit
 import SpriteKit
 
@@ -37,9 +36,8 @@ class Grid {
             }
         }
     }
-    /*
-     ** Add grid to specified view's layer as a sublayer
-     */
+    
+    //Add grid to specified view's layer as a sublayer
     func addGridToView(toView: UIView) {
         for r in 0..<numberOfRows {
             for c in 0..<numberOfColumns {
@@ -49,22 +47,14 @@ class Grid {
         }
     }
     
-    /*
-     ** Convert given index to array index
-     */
+    // Convert given index to array index
     func indexToArray(index: Int) -> (r: Int, c: Int) {
         //var
         return (r: (index - 1) / numberOfColumns, c: (index - 1) % numberOfColumns)
     }
-
-    /*
-     ** Convert given array to index
-     */
+    
+    // Convert given array to index
     func arrayToIndex(array: (r: Int, c: Int)) -> Int {
         return array.r * numberOfColumns + array.c + 1
     }
-    
-    /*
-     ** Change the type of a given block
-     */
 }

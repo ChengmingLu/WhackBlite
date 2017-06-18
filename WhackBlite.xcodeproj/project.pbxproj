@@ -17,6 +17,7 @@
 		042F9E981EE4A153008A7F6D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 042F9E961EE4A153008A7F6D /* LaunchScreen.storyboard */; };
 		042F9EA01EE4A1D4008A7F6D /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042F9E9F1EE4A1D4008A7F6D /* Block.swift */; };
 		042F9EA21EE4A1E1008A7F6D /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042F9EA11EE4A1E1008A7F6D /* Grid.swift */; };
+		04D8A4F41EEC736000707AA6 /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D8A4F31EEC736000707AA6 /* Ball.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		042F9E991EE4A153008A7F6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		042F9E9F1EE4A1D4008A7F6D /* Block.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
 		042F9EA11EE4A1E1008A7F6D /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
+		04D8A4F31EEC736000707AA6 /* Ball.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				042F9E891EE4A153008A7F6D /* GameScene.sks */,
 				042F9E8B1EE4A153008A7F6D /* Actions.sks */,
 				042F9E8D1EE4A153008A7F6D /* GameScene.swift */,
+				04D8A4F31EEC736000707AA6 /* Ball.swift */,
 				042F9E9F1EE4A1D4008A7F6D /* Block.swift */,
 				042F9EA11EE4A1E1008A7F6D /* Grid.swift */,
 				042F9E8F1EE4A153008A7F6D /* GameViewController.swift */,
@@ -154,6 +157,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04D8A4F41EEC736000707AA6 /* Ball.swift in Sources */,
 				042F9E8E1EE4A153008A7F6D /* GameScene.swift in Sources */,
 				042F9EA01EE4A1D4008A7F6D /* Block.swift in Sources */,
 				042F9E901EE4A153008A7F6D /* GameViewController.swift in Sources */,
@@ -285,6 +289,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = DX2Q72UENJ;
 				INFOPLIST_FILE = WhackBlite/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fulmar.WhackBlite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -298,6 +303,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = DX2Q72UENJ;
 				INFOPLIST_FILE = WhackBlite/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fulmar.WhackBlite;
 				PRODUCT_NAME = "$(TARGET_NAME)";

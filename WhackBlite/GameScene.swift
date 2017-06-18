@@ -10,43 +10,28 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
-    var testGrid = Grid.init(withNumberOfRows: 4, withNumberOfColumns: 4, withBlockSize: UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height ? (UIScreen.main.bounds.size.width - 40) / 4 : (UIScreen.main.bounds.size.height - 40) / 4)
-    
+    var testGrid: Grid = Grid.init(withNumberOfRows: 4, withNumberOfColumns: 4, withBlockSize: UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height ? (UIScreen.main.bounds.size.width - 40) / 4 : (UIScreen.main.bounds.size.height - 40) / 4)
     override func didMove(to view: SKView) {
-        //var testBlock: Block
-        //testBlock = Block.init(initRect: CGRect(x: 50, y: 50, width: 100, height: 100), typeOfBlock: Block.type.randomType())
-        //self.view?.layer.addSublayer(testBlock.layer)
-        
+        let testBall = Ball.init(initRect: CGRect(x:testGrid.blocks[0][0].layer.frame.origin.x, y:testGrid.blocks[0][0].layer.frame.origin.y, width:testGrid.blockSize / 3, height:testGrid.blockSize / 3), ofType: Ball.type.Black)
         testGrid.addGridToView(toView: self.view!)
-        //testgrid.blocks[0][0].shrinkBlockAndSurroundings()
-        //testgrid.blocks[0][1].shrinkBlockAndSurroundings()
-        
-    }
-    
-    
-    func touchDown(atPoint pos : CGPoint) {
-        NSLog("GS: touched down")
-
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-
+        self.view?.layer.addSublayer(testBall.layer)
+        self.view?.layer.addSublayer(testBall.scoreLabel)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        NSLog("GS: touched began")
+        //NSLog("GS: touched began")
         for c in 0..<4 {
             for r in 0..<4 {
                 if testGrid.blocks[r][c].layer.frame.contains((touches.first?.location(in: self.view))!) {
-                    NSLog("GS: touched at row %d, coloum %d, rotating", r, c)
-                    testGrid.blocks[r][c].rotateClockwise90()
+                    //NSLog("GS: touched at row %d, coloum %d, rotating", r, c)
+                    if testGrid.blocks[r][c].canRotate {
+                        testGrid.blocks[r][c].rotateClockwise90()
+                    }
+                    return
                 }
             }
         }
+        //add a ball whenever we touch somewhere else
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
