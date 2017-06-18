@@ -54,9 +54,8 @@ class Ball {
         //setting font
         let systemFont = UIFont.systemFont(ofSize: 0.0) //size is unimportant here
         let fontStringRef = systemFont.fontName as CFString
-        print("fontStringRef is \(fontStringRef)")
         scoreLabel.font = fontStringRef
-        scoreLabel.fontSize = 18.0
+        scoreLabel.fontSize =  initRect.size.width //needs to be tested
         
     }
     
@@ -79,11 +78,11 @@ class Ball {
     
     //manage movement of the ball
     func move() {
+        //if outside the grid: return score and self destruction
         
         CATransaction.begin()
         CATransaction.setAnimationDuration(2)
         CATransaction.setCompletionBlock {
-            
             
         }
         layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)

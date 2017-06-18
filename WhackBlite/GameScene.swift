@@ -10,22 +10,44 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
-    var testGrid: Grid = Grid.init(withNumberOfRows: 4, withNumberOfColumns: 4, withBlockSize: UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height ? (UIScreen.main.bounds.size.width - 40) / 4 : (UIScreen.main.bounds.size.height - 40) / 4)
+    
+    var mainGrid: Grid = Grid.init(withNumberOfRows: 4, withNumberOfColumns: 4, withBlockSize: UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height ? (UIScreen.main.bounds.size.width - 40) / 4 : (UIScreen.main.bounds.size.height - 40) / 4)
+    var totalScoreLabel: CATextLayer = CATextLayer()
+    var totalScore: Int = 0
+    
     override func didMove(to view: SKView) {
-        let testBall = Ball.init(initRect: CGRect(x:testGrid.blocks[0][0].layer.frame.origin.x, y:testGrid.blocks[0][0].layer.frame.origin.y, width:testGrid.blockSize / 3, height:testGrid.blockSize / 3), ofType: Ball.type.Black)
-        testGrid.addGridToView(toView: self.view!)
+        //init total score label
+        totalScoreLabel.frame = CGRect(x: mainGrid.blocks[0][0].layer.frame.origin.x, y: mainGrid.blocks[0][0].layer.frame.origin.y - mainGrid.blockSize / 3, width: mainGrid.blocks[0][0].layer.frame.size.width / 3, height: mainGrid.blocks[0][0].layer.frame.size.height)
+        resetTotalScore()
+        totalScoreLabel.contentsScale = UIScreen.main.scale
+        totalScoreLabel.alignmentMode = kCAAlignmentCenter
+        totalScoreLabel.foregroundColor = UIColor.white.cgColor
+        //font
+        let systemFont = UIFont.systemFont(ofSize: 0.0)
+        let fontStringRef = systemFont.fontName as CFString
+        totalScoreLabel.font = fontStringRef
+        totalScoreLabel.fontSize = 20
+        self.view?.layer.addSublayer(totalScoreLabel)
+        
+        //add grid to view
+        mainGrid.addGridToView(toView: self.view!)
+        
+        let testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x, y:mainGrid.blocks[0][0].layer.frame.origin.y, width:mainGrid.blockSize / 3, height:mainGrid.blockSize / 3), ofType: Ball.type.Black)
+        
         self.view?.layer.addSublayer(testBall.layer)
         self.view?.layer.addSublayer(testBall.scoreLabel)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         //NSLog("GS: touched began")
+        incTotalScore()
+        
         for c in 0..<4 {
             for r in 0..<4 {
-                if testGrid.blocks[r][c].layer.frame.contains((touches.first?.location(in: self.view))!) {
+                if mainGrid.blocks[r][c].layer.frame.contains((touches.first?.location(in: self.view))!) {
                     //NSLog("GS: touched at row %d, coloum %d, rotating", r, c)
-                    if testGrid.blocks[r][c].canRotate {
-                        testGrid.blocks[r][c].rotateClockwise90()
+                    if mainGrid.blocks[r][c].canRotate {
+                        mainGrid.blocks[r][c].rotateClockwise90()
                     }
                     return
                 }
@@ -34,20 +56,21 @@ class GameScene: SKScene {
         //add a ball whenever we touch somewhere else
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-
-    }
-    
-    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+    }
+    
+    func updateTotalScore() {
+        totalScoreLabel.string = "\(totalScore)"
+    }
+    
+    func resetTotalScore() {
+        totalScore = 0
+        updateTotalScore()
+    }
+    
+    func incTotalScore() {
+        totalScore += 1
+        updateTotalScore()
     }
 }
