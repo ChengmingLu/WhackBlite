@@ -7,3 +7,19 @@
 //
 
 import Foundation
+
+
+class BallManager {
+    
+    var ballArray: NSMutableArray
+    
+    
+    init() {
+        ballArray = NSMutableArray()
+        
+    }
+    
+    func generateBall() {
+        
+    }
+}

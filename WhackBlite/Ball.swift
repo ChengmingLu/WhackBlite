@@ -35,6 +35,8 @@ class Ball {
     var colour: CGColor
     var diameter: CGFloat
     
+    //test
+    var initialPos: CGPoint
     
     init(initRect: CGRect, ofType: type) {
         score = 0
@@ -47,6 +49,7 @@ class Ball {
         layer.cornerRadius = diameter / 2 // dis makes a circle, kind of
         scoreLabel = CATextLayer()
         scoreLabel.frame = initRect
+        initialPos = initRect.origin
         resetScore()
         scoreLabel.contentsScale = UIScreen.main.scale
         scoreLabel.alignmentMode = kCAAlignmentCenter
@@ -56,7 +59,7 @@ class Ball {
         let fontStringRef = systemFont.fontName as CFString
         scoreLabel.font = fontStringRef
         scoreLabel.fontSize =  initRect.size.width //needs to be tested
-        
+        //layer.addSublayer(scoreLabel)
     }
     
     // update score Label as the score is changed
@@ -79,14 +82,23 @@ class Ball {
     //manage movement of the ball
     func move() {
         //if outside the grid: return score and self destruction
+        //test move
+        let lengthToMove: CGFloat = Grid.blockSize / 2 - layer.frame.size.width / 2
         
         CATransaction.begin()
         CATransaction.setAnimationDuration(2)
         CATransaction.setCompletionBlock {
-            
+            print("Ball: mom I moved, now I am at \(self.layer.frame.origin)")
+            self.move()
         }
-        layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)
+        layer.transform = CATransform3DTranslate(layer.transform, lengthToMove, lengthToMove,  0)
+        scoreLabel.transform = layer.transform
         CATransaction.commit()
+    }
+    
+    func test_resetPosition() {
+        layer.frame.origin = initialPos
+        scoreLabel.frame.origin = initialPos
     }
 }
 
