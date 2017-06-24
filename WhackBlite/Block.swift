@@ -37,6 +37,7 @@ class Block {
     var cornerRadiusSetting: CGFloat = 0
     var size: CGFloat
     var canRotate: Bool
+    var shapeLayer: CAShapeLayer
 
     init(initRect: CGRect, typeOfBlock: type) {
         screenScale = UIScreen.main.bounds
@@ -48,6 +49,8 @@ class Block {
         blockType = typeOfBlock
         size = initRect.size.width
         canRotate = true
+        shapeLayer = CAShapeLayer()
+        layer.addSublayer(shapeLayer)
     }
     
     func setTypeAndRedraw(typeToSet: type) {
@@ -83,13 +86,14 @@ class Block {
             path.addLine(to: TLPoint)
             path.addLine(to: BLPoint)
         }
-
-        let shapeLayer: CAShapeLayer = CAShapeLayer.init()
+        shapeLayer.removeFromSuperlayer()
+        shapeLayer = CAShapeLayer.init()
         shapeLayer.path = path.cgPath
         shapeLayer.fillColor = UIColor.black.cgColor
         shapeLayer.strokeColor = UIColor.black.cgColor
         shapeLayer.frame.origin = layer.bounds.origin
         layer.addSublayer(shapeLayer)
+        
     }
     
     func shrinkBlockAndSurroundings() {

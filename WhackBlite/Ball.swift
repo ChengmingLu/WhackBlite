@@ -28,17 +28,38 @@ class Ball {
             return type(rawValue: rand)!
         }
     }
+    
+    enum direction: UInt32 {
+        case Top
+        case Bottom
+        case Left
+        case Right
+        private static let count: direction.RawValue = {
+            var maxValue: UInt32 = 0
+            while let _ = direction(rawValue: maxValue) {
+                maxValue += 1
+            }
+            return maxValue
+        }()
+        
+        static func randomDirection() -> direction {
+            let rand = arc4random_uniform(count)
+            return direction(rawValue: rand)!
+        }
+    }
+    
     var score: Int
     var scoreLabel: CATextLayer
     var ballType: type
     var layer: CALayer
     var colour: CGColor
     var diameter: CGFloat
-    
+    var nextBlockToAccess: Block
+    var directionToBlock: direction
     //test
     var initialPos: CGPoint
     
-    init(initRect: CGRect, ofType: type) {
+    init(initRect: CGRect, ofType: type, toBlock: Block, fromDirection: direction) {
         score = 0
         ballType = ofType
         colour = ballType == type.Black ? UIColor.black.cgColor : UIColor.white.cgColor
@@ -50,6 +71,10 @@ class Ball {
         scoreLabel = CATextLayer()
         scoreLabel.frame = initRect
         initialPos = initRect.origin
+        nextBlockToAccess = toBlock
+        directionToBlock = fromDirection
+        
+        //indirect initialization
         resetScore()
         scoreLabel.contentsScale = UIScreen.main.scale
         scoreLabel.alignmentMode = kCAAlignmentCenter
@@ -58,8 +83,14 @@ class Ball {
         let systemFont = UIFont.systemFont(ofSize: 0.0) //size is unimportant here
         let fontStringRef = systemFont.fontName as CFString
         scoreLabel.font = fontStringRef
-        scoreLabel.fontSize =  initRect.size.width //needs to be tested
+        scoreLabel.fontSize =  initRect.size.width * 0.76 //needs to be tested
         //layer.addSublayer(scoreLabel)
+        
+    }
+    
+    func addLayersToView(toView: UIView) {
+        toView.layer.addSublayer(layer)
+        toView.layer.addSublayer(scoreLabel)
     }
     
     // update score Label as the score is changed
@@ -83,12 +114,14 @@ class Ball {
     func move() {
         //if outside the grid: return score and self destruction
         //test move
-        let lengthToMove: CGFloat = Grid.blockSize / 2 - layer.frame.size.width / 2
+        let lengthToMove: CGFloat = Grid.blockSize / 2
         
         CATransaction.begin()
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear))
         CATransaction.setAnimationDuration(2)
         CATransaction.setCompletionBlock {
-            print("Ball: mom I moved, now I am at \(self.layer.frame.origin)")
+            //print("Ball: mom I moved, now I am at \(self.layer.frame.origin)")
+            
             self.move()
         }
         layer.transform = CATransform3DTranslate(layer.transform, lengthToMove, lengthToMove,  0)
