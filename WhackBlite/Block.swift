@@ -38,8 +38,10 @@ class Block {
     var size: CGFloat
     var canRotate: Bool
     var shapeLayer: CAShapeLayer
+    let xIndex: Int
+    let yIndex: Int
 
-    init(initRect: CGRect, typeOfBlock: type) {
+    init(initRect: CGRect, typeOfBlock: type, x: Int, y: Int) {
         screenScale = UIScreen.main.bounds
         layer = CALayer()
         layer.backgroundColor = UIColor.white.cgColor
@@ -49,6 +51,8 @@ class Block {
         blockType = typeOfBlock
         size = initRect.size.width
         canRotate = true
+        xIndex = x
+        yIndex = y
         shapeLayer = CAShapeLayer()
         layer.addSublayer(shapeLayer)
     }

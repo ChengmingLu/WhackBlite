@@ -47,7 +47,7 @@ class Ball {
             return direction(rawValue: rand)!
         }
     }
-    
+    let lengthToMove: CGFloat = Grid.blockSize / 2
     var score: Int
     var scoreLabel: CATextLayer
     var ballType: type
@@ -57,7 +57,7 @@ class Ball {
     var nextBlockToAccess: Block
     var directionToBlock: direction
     //test
-    var initialPos: CGPoint
+    //var initialPos: CGPoint
     
     init(initRect: CGRect, ofType: type, toBlock: Block, fromDirection: direction) {
         score = 0
@@ -70,7 +70,7 @@ class Ball {
         layer.cornerRadius = diameter / 2 // dis makes a circle, kind of
         scoreLabel = CATextLayer()
         scoreLabel.frame = initRect
-        initialPos = initRect.origin
+        //initialPos = initRect.origin
         nextBlockToAccess = toBlock
         directionToBlock = fromDirection
         
@@ -114,24 +114,97 @@ class Ball {
     func move() {
         //if outside the grid: return score and self destruction
         //test move
-        let lengthToMove: CGFloat = Grid.blockSize / 2
+        var xToMove: CGFloat = 0
+        var yToMove: CGFloat = 0
+        switch directionToBlock {
+        case direction.Top:
+            switch nextBlockToAccess.blockType {
+            case Block.type.WBL:
+                print("Not accessible")
+                retire()
+                return
+            case Block.type.WBR:
+                print("Not accessible")
+                retire()
+                return
+            case Block.type.WTL:
+                xToMove = -lengthToMove
+                yToMove = lengthToMove
+            case Block.type.WTR:
+                xToMove = lengthToMove
+                yToMove = lengthToMove
+            }
+        case direction.Bottom:
+            switch nextBlockToAccess.blockType {
+            case Block.type.WBL:
+                xToMove = -lengthToMove
+                yToMove = -lengthToMove
+            case Block.type.WBR:
+                xToMove = lengthToMove
+                yToMove = -lengthToMove
+            case Block.type.WTL:
+                print("Not accessible")
+                retire()
+                return
+            case Block.type.WTR:
+                print("Not accessible")
+                retire()
+                return
+            }
+        case direction.Left:
+            switch nextBlockToAccess.blockType {
+            case Block.type.WBL:
+                xToMove = lengthToMove
+                yToMove = lengthToMove
+            case Block.type.WBR:
+                print("Not accessible")
+                retire()
+                return
+            case Block.type.WTL:
+                xToMove = lengthToMove
+                yToMove = -lengthToMove
+            case Block.type.WTR:
+                print("Not accessible")
+                retire()
+                return
+            }
+        case direction.Right:
+            switch nextBlockToAccess.blockType {
+            case Block.type.WBL:
+                print("Not accessible")
+                retire()
+                return
+            case Block.type.WBR:
+                xToMove = -lengthToMove
+                yToMove = lengthToMove
+            case Block.type.WTL:
+                print("Not accessible")
+                retire()
+                return
+            case Block.type.WTR:
+                xToMove = -lengthToMove
+                yToMove = -lengthToMove
+            }
+        }
         
         CATransaction.begin()
         CATransaction.setAnimationTimingFunction(CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear))
         CATransaction.setAnimationDuration(2)
         CATransaction.setCompletionBlock {
-            //print("Ball: mom I moved, now I am at \(self.layer.frame.origin)")
-            
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "WhatIsNextBlock"), object: self, userInfo: ["currentBlock":self.nextBlockToAccess, "direction":self.directionToBlock])
+            self.incScore()
             self.move()
         }
-        layer.transform = CATransform3DTranslate(layer.transform, lengthToMove, lengthToMove,  0)
+        layer.transform = CATransform3DTranslate(layer.transform, xToMove, yToMove, 0)
         scoreLabel.transform = layer.transform
         CATransaction.commit()
     }
     
-    func test_resetPosition() {
-        layer.frame.origin = initialPos
-        scoreLabel.frame.origin = initialPos
+    
+    
+    //suicide
+    func retire() {
+        
     }
 }
 

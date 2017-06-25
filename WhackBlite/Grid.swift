@@ -29,10 +29,10 @@ class Grid {
         let rowStartPosition: CGFloat = rawHalfRowPosition
         count = numberOfRows * numberOfColumns
         grid = CALayer()
-        blocks = Array(repeating: Array(repeating: Block.init(initRect: CGRect(x: 0, y: 0, width: Grid.blockSize, height: Grid.blockSize), typeOfBlock: Block.type.randomType()), count: numberOfColumns), count: numberOfRows)
+        blocks = Array(repeating: Array(repeating: Block.init(initRect: CGRect(x: 0, y: 0, width: Grid.blockSize, height: Grid.blockSize), typeOfBlock: Block.type.randomType(), x:0, y:0), count: numberOfColumns), count: numberOfRows)
         for r in 0..<numberOfRows {
             for c in 0..<numberOfColumns {
-                blocks[r][c] = Block(initRect: CGRect(x: columnStartPosition + CGFloat(c) * Grid.blockSize, y: rowStartPosition + CGFloat(r) * Grid.blockSize, width: Grid.blockSize, height: Grid.blockSize), typeOfBlock: Block.type.randomType())
+                blocks[r][c] = Block(initRect: CGRect(x: columnStartPosition + CGFloat(c) * Grid.blockSize, y: rowStartPosition + CGFloat(r) * Grid.blockSize, width: Grid.blockSize, height: Grid.blockSize), typeOfBlock: Block.type.randomType(), x:r, y:c)
             }
         }
     }
