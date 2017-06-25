@@ -40,7 +40,7 @@ class GameScene: SKScene {
         
         //testing
         let ballDiameter = Grid.blockSize / 3
-        testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: Ball.type.White, toBlock: mainGrid.blocks[0][0], fromDirection: Ball.direction.Top)
+        testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: Ball.type.Black, toBlock: mainGrid.blocks[0][0], fromDirection: Ball.direction.Top)
         
         testBall.addLayersToView(toView: self.view!)
         NotificationCenter.default.addObserver(self, selector: #selector(getNextBlockWithCurrentBlockIndex(note:)), name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: testBall)
@@ -94,65 +94,146 @@ class GameScene: SKScene {
         let userInformation = note.userInfo as NSDictionary?
         let direction = userInformation?.object(forKey: "direction") as! Ball.direction
         let currentblock = userInformation?.object(forKey: "currentBlock") as! Block
+        let theBall = note.object as! Ball
         switch direction {
         case Ball.direction.Top:
             switch currentblock.blockType {
             case Block.type.WBL:
-                break
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
+                        testBall.directionToBlock = Ball.direction.Left
+                    }
+                case Ball.type.White:
+                    break
+                }
             case Block.type.WBR:
-                break
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    if (currentblock.yIndex == 0) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
+                        testBall.directionToBlock = Ball.direction.Right
+                    }
+                case Ball.type.White:
+                    break
+                }
             case Block.type.WTL:
-                if (currentblock.yIndex == 0) {
-                    print("not gonna dear")
-                    testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
-                } else {
-                    testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
-                    testBall.directionToBlock = Ball.direction.Right
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    break
+                case Ball.type.White:
+                    if (currentblock.yIndex == 0) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
+                        testBall.directionToBlock = Ball.direction.Right
+                    }
                 }
             case Block.type.WTR:
-                if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
-                    print("not gonna dear")
-                    testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
-                } else {
-                    testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
-                    testBall.directionToBlock = Ball.direction.Left
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    break
+                case Ball.type.White:
+                    if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
+                        testBall.directionToBlock = Ball.direction.Left
+                    }
                 }
             }
         case Ball.direction.Bottom:
             switch currentblock.blockType {
             case Block.type.WBL:
-                if (currentblock.yIndex == 0) {
-                    print("not gonna dear")
-                    testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
-                } else {
-                    testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
-                    testBall.directionToBlock = Ball.direction.Right
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    break
+                case Ball.type.White:
+                    if (currentblock.yIndex == 0) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
+                        testBall.directionToBlock = Ball.direction.Right
+                    }
                 }
             case Block.type.WBR:
-                if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
-                    print("not gonna dear")
-                    testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
-                } else {
-                    testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
-                    testBall.directionToBlock = Ball.direction.Left
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    break
+                case Ball.type.White:
+                    if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
+                        testBall.directionToBlock = Ball.direction.Left
+                    }
                 }
             case Block.type.WTL:
-                break
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
+                        testBall.directionToBlock = Ball.direction.Left
+                    }
+                case Ball.type.White:
+                    break
+                }
             case Block.type.WTR:
-                break
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    if (currentblock.yIndex == 0) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
+                        testBall.directionToBlock = Ball.direction.Right
+                    }
+                case Ball.type.White:
+                    break
+                }
             }
         case Ball.direction.Left:
             switch currentblock.blockType {
             case Block.type.WBL:
-                if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
-                    print("not gonna dear")
-                    testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
-                } else {
-                    testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
-                    testBall.directionToBlock = Ball.direction.Top
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    break
+                case Ball.type.White:
+                    if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
+                        testBall.directionToBlock = Ball.direction.Top
+                    }
                 }
             case Block.type.WBR:
-                break
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    if (currentblock.xIndex == 0) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
+                        testBall.directionToBlock = Ball.direction.Bottom
+                    }
+                case Ball.type.White:
+                    break
+                }
             case Block.type.WTL:
                 if (currentblock.xIndex == 0) {
                     print("not gonna dear")
@@ -162,33 +243,74 @@ class GameScene: SKScene {
                     testBall.directionToBlock = Ball.direction.Bottom
                 }
             case Block.type.WTR:
-                break
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
+                        testBall.directionToBlock = Ball.direction.Top
+                    }
+                case Ball.type.White:
+                    break
+                }
             }
         case Ball.direction.Right:
             switch currentblock.blockType {
             case Block.type.WBL:
-                break
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    if (currentblock.xIndex == 0) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
+                        testBall.directionToBlock = Ball.direction.Bottom
+                    }
+                case Ball.type.White:
+                    break
+                }
             case Block.type.WBR:
-                if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
-                    print("not gonna dear")
-                    testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
-                } else {
-                    testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
-                    testBall.directionToBlock = Ball.direction.Top
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    break
+                case Ball.type.White:
+                    if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
+                        testBall.directionToBlock = Ball.direction.Top
+                    }
                 }
             case Block.type.WTL:
-                break
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
+                        testBall.directionToBlock = Ball.direction.Top
+                    }
+                case Ball.type.White:
+                    break
+                }
             case Block.type.WTR:
-                if (currentblock.xIndex == 0) {
-                    print("not gonna dear")
-                    testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
-                } else {
-                    testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
-                    testBall.directionToBlock = Ball.direction.Bottom
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    break
+                case Ball.type.White:
+                    if (currentblock.xIndex == 0) {
+                        print("not gonna dear")
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
+                        testBall.directionToBlock = Ball.direction.Bottom
+                    }
                 }
             }
         }
-
-        
     }
 }

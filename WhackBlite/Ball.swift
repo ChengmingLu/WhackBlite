@@ -120,70 +120,174 @@ class Ball {
         case direction.Top:
             switch nextBlockToAccess.blockType {
             case Block.type.WBL:
-                print("Not accessible")
-                retire()
-                return
+                switch ballType {
+                case type.Black:
+                    xToMove = lengthToMove
+                    yToMove = lengthToMove
+                case type.White:
+                    print("Not accessible")
+                    retire()
+                    return
+                }
             case Block.type.WBR:
-                print("Not accessible")
-                retire()
-                return
+                switch ballType {
+                case type.Black:
+                    xToMove = -lengthToMove
+                    yToMove = lengthToMove
+                case type.White:
+                    print("Not accessible")
+                    retire()
+                    return
+                }
             case Block.type.WTL:
-                xToMove = -lengthToMove
-                yToMove = lengthToMove
+                switch ballType {
+                case type.Black:
+                    print("Not accessible")
+                    retire()
+                    return
+                case type.White:
+                    xToMove = -lengthToMove
+                    yToMove = lengthToMove
+                }
             case Block.type.WTR:
-                xToMove = lengthToMove
-                yToMove = lengthToMove
+                switch ballType {
+                case type.Black:
+                    print("Not accessible")
+                    retire()
+                    return
+                case type.White:
+                    xToMove = lengthToMove
+                    yToMove = lengthToMove
+                }
             }
         case direction.Bottom:
             switch nextBlockToAccess.blockType {
             case Block.type.WBL:
-                xToMove = -lengthToMove
-                yToMove = -lengthToMove
+                switch ballType {
+                case type.Black:
+                    print("Not accessible")
+                    retire()
+                    return
+                case type.White:
+                    xToMove = -lengthToMove
+                    yToMove = -lengthToMove
+                }
             case Block.type.WBR:
-                xToMove = lengthToMove
-                yToMove = -lengthToMove
+                switch ballType {
+                case type.Black:
+                    print("Not accessible")
+                    retire()
+                    return
+                case type.White:
+                    xToMove = lengthToMove
+                    yToMove = -lengthToMove
+                }
             case Block.type.WTL:
-                print("Not accessible")
-                retire()
-                return
+                switch ballType {
+                case type.Black:
+                    xToMove = lengthToMove
+                    yToMove = -lengthToMove
+                case type.White:
+                    print("Not accessible")
+                    retire()
+                    return
+                }
             case Block.type.WTR:
-                print("Not accessible")
-                retire()
-                return
+                switch ballType {
+                case type.Black:
+                    xToMove = -lengthToMove
+                    yToMove = -lengthToMove
+                case type.White:
+                    print("Not accessible")
+                    retire()
+                    return
+                }
             }
         case direction.Left:
             switch nextBlockToAccess.blockType {
             case Block.type.WBL:
-                xToMove = lengthToMove
-                yToMove = lengthToMove
+                switch ballType {
+                case type.Black:
+                    print("Not accessible")
+                    retire()
+                    return
+                case type.White:
+                    xToMove = lengthToMove
+                    yToMove = lengthToMove
+                }
             case Block.type.WBR:
-                print("Not accessible")
-                retire()
-                return
+                switch ballType {
+                case type.Black:
+                    xToMove = lengthToMove
+                    yToMove = -lengthToMove
+                case type.White:
+                    print("Not accessible")
+                    retire()
+                    return
+                }
             case Block.type.WTL:
-                xToMove = lengthToMove
-                yToMove = -lengthToMove
+                switch ballType {
+                case type.Black:
+                    print("Not accessible")
+                    retire()
+                    return
+                case type.White:
+                    xToMove = lengthToMove
+                    yToMove = -lengthToMove
+                }
             case Block.type.WTR:
-                print("Not accessible")
-                retire()
-                return
+                switch ballType {
+                case type.Black:
+                    xToMove = lengthToMove
+                    yToMove = lengthToMove
+                case type.White:
+                    print("Not accessible")
+                    retire()
+                    return
+                }
             }
         case direction.Right:
             switch nextBlockToAccess.blockType {
             case Block.type.WBL:
-                print("Not accessible")
-                retire()
-                return
+                switch ballType {
+                case type.Black:
+                    xToMove = -lengthToMove
+                    yToMove = -lengthToMove
+                case type.White:
+                    print("Not accessible")
+                    retire()
+                    return
+                }
             case Block.type.WBR:
-                xToMove = -lengthToMove
-                yToMove = lengthToMove
+                switch ballType {
+                case type.Black:
+                    print("Not accessible")
+                    retire()
+                    return
+                case type.White:
+                    xToMove = -lengthToMove
+                    yToMove = lengthToMove
+                }
             case Block.type.WTL:
-                print("Not accessible")
-                retire()
-                return
+                switch ballType {
+                case type.Black:
+                    xToMove = -lengthToMove
+                    yToMove = lengthToMove
+                case type.White:
+                    print("Not accessible")
+                    retire()
+                    return
+                }
             case Block.type.WTR:
-                xToMove = -lengthToMove
-                yToMove = -lengthToMove
+                switch ballType {
+                case type.Black:
+                    print("Not accessible")
+                    retire()
+                    return
+                case type.White:
+                    xToMove = -lengthToMove
+                    yToMove = -lengthToMove
+                }
             }
         }
         
