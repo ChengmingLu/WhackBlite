@@ -48,10 +48,12 @@ class Ball {
         }
     }
     let lengthToMove: CGFloat = Grid.blockSize / 2
+    let borderOffset: CGFloat = Grid.blockSize / 50
     var score: Int
     var scoreLabel: CATextLayer
     var ballType: type
     var layer: CALayer
+    var borderLayer: CALayer
     var colour: CGColor
     var diameter: CGFloat
     var nextBlockToAccess: Block
@@ -63,11 +65,16 @@ class Ball {
         score = 0
         ballType = ofType
         colour = ballType == type.Black ? UIColor.black.cgColor : UIColor.white.cgColor
+        borderLayer = CALayer()
+        borderLayer.frame = initRect
+        borderLayer.backgroundColor = ballType == type.Black ? UIColor.white.cgColor : UIColor.black.cgColor
+        diameter = borderLayer.frame.size.width
+        borderLayer.cornerRadius = diameter / 2
         layer = CALayer()
-        layer.frame = initRect
+        layer.frame = CGRect.init(x: initRect.origin.x + borderOffset / 2, y: initRect.origin.y + borderOffset / 2, width: initRect.size.width - borderOffset, height: initRect.size.height - borderOffset)
         layer.backgroundColor = colour
-        diameter = layer.frame.size.width
-        layer.cornerRadius = diameter / 2 // dis makes a circle, kind of
+        layer.cornerRadius = (diameter - borderOffset) / 2 // dis makes a circle, kind of
+
         scoreLabel = CATextLayer()
         scoreLabel.frame = initRect
         //initialPos = initRect.origin
@@ -89,6 +96,7 @@ class Ball {
     }
     
     func addLayersToView(toView: UIView) {
+        toView.layer.addSublayer(borderLayer)
         toView.layer.addSublayer(layer)
         toView.layer.addSublayer(scoreLabel)
     }
@@ -125,7 +133,11 @@ class Ball {
                     xToMove = lengthToMove
                     yToMove = lengthToMove
                 case type.White:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 }
@@ -135,14 +147,22 @@ class Ball {
                     xToMove = -lengthToMove
                     yToMove = lengthToMove
                 case type.White:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 }
             case Block.type.WTL:
                 switch ballType {
                 case type.Black:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 case type.White:
@@ -152,7 +172,11 @@ class Ball {
             case Block.type.WTR:
                 switch ballType {
                 case type.Black:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 case type.White:
@@ -165,7 +189,11 @@ class Ball {
             case Block.type.WBL:
                 switch ballType {
                 case type.Black:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 case type.White:
@@ -175,7 +203,11 @@ class Ball {
             case Block.type.WBR:
                 switch ballType {
                 case type.Black:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 case type.White:
@@ -188,7 +220,11 @@ class Ball {
                     xToMove = lengthToMove
                     yToMove = -lengthToMove
                 case type.White:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 }
@@ -198,7 +234,11 @@ class Ball {
                     xToMove = -lengthToMove
                     yToMove = -lengthToMove
                 case type.White:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 }
@@ -208,7 +248,11 @@ class Ball {
             case Block.type.WBL:
                 switch ballType {
                 case type.Black:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 case type.White:
@@ -221,14 +265,22 @@ class Ball {
                     xToMove = lengthToMove
                     yToMove = -lengthToMove
                 case type.White:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 }
             case Block.type.WTL:
                 switch ballType {
                 case type.Black:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 case type.White:
@@ -241,7 +293,11 @@ class Ball {
                     xToMove = lengthToMove
                     yToMove = lengthToMove
                 case type.White:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 }
@@ -254,14 +310,22 @@ class Ball {
                     xToMove = -lengthToMove
                     yToMove = -lengthToMove
                 case type.White:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 }
             case Block.type.WBR:
                 switch ballType {
                 case type.Black:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 case type.White:
@@ -274,14 +338,22 @@ class Ball {
                     xToMove = -lengthToMove
                     yToMove = lengthToMove
                 case type.White:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 }
             case Block.type.WTR:
                 switch ballType {
                 case type.Black:
-                    print("Not accessible")
+                    if nextBlockToAccess.layer.frame == CGRect.zero {
+                        print("Give me score")
+                    } else {
+                        print("Not accessible")
+                    }
                     retire()
                     return
                 case type.White:
@@ -293,14 +365,17 @@ class Ball {
         
         CATransaction.begin()
         CATransaction.setAnimationTimingFunction(CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear))
-        CATransaction.setAnimationDuration(2)
+        CATransaction.setAnimationDuration(1)
         CATransaction.setCompletionBlock {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "WhatIsNextBlock"), object: self, userInfo: ["currentBlock":self.nextBlockToAccess, "direction":self.directionToBlock])
-            self.incScore()
+            if !(self.nextBlockToAccess.layer.frame == CGRect.zero) {
+                self.incScore()
+            }
             self.move()
         }
-        layer.transform = CATransform3DTranslate(layer.transform, xToMove, yToMove, 0)
-        scoreLabel.transform = layer.transform
+        borderLayer.transform = CATransform3DTranslate(borderLayer.transform, xToMove, yToMove, 0)
+        layer.transform = borderLayer.transform
+        scoreLabel.transform = borderLayer.transform
         CATransaction.commit()
     }
     
@@ -308,7 +383,9 @@ class Ball {
     
     //suicide
     func retire() {
-        
+        scoreLabel.removeFromSuperlayer()
+        layer.removeFromSuperlayer()
+        borderLayer.removeFromSuperlayer()
     }
 }
 

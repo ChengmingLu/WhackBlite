@@ -20,7 +20,7 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
 
         //init total score label
-        totalScoreLabel.frame = CGRect(x: mainGrid.blocks[0][0].layer.frame.origin.x, y: mainGrid.blocks[0][0].layer.frame.origin.y - Grid.blockSize / 3, width: mainGrid.blocks[0][0].layer.frame.size.width / 3, height: mainGrid.blocks[0][0].layer.frame.size.height)
+        totalScoreLabel.frame = CGRect(x: mainGrid.blocks[0][0].layer.frame.origin.x, y: mainGrid.blocks[0][0].layer.frame.origin.y - Grid.blockSize / 2, width: mainGrid.blocks[0][0].layer.frame.size.width / 3, height: mainGrid.blocks[0][0].layer.frame.size.height)
         resetTotalScore()
         totalScoreLabel.contentsScale = UIScreen.main.scale
         totalScoreLabel.alignmentMode = kCAAlignmentCenter
@@ -40,7 +40,7 @@ class GameScene: SKScene {
         
         //testing
         let ballDiameter = Grid.blockSize / 3
-        testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: Ball.type.Black, toBlock: mainGrid.blocks[0][0], fromDirection: Ball.direction.Top)
+        testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: Ball.type.randomType(), toBlock: mainGrid.blocks[0][0], fromDirection: Ball.direction.Top)
         
         testBall.addLayersToView(toView: self.view!)
         NotificationCenter.default.addObserver(self, selector: #selector(getNextBlockWithCurrentBlockIndex(note:)), name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: testBall)
@@ -84,8 +84,8 @@ class GameScene: SKScene {
         updateTotalScore()
     }
     
-    func incTotalScore() {
-        totalScore += 1
+    func incTotalScore(amount: Int) {
+        totalScore += amount
         updateTotalScore()
     }
     
@@ -102,35 +102,38 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
                         testBall.directionToBlock = Ball.direction.Left
                     }
                 case Ball.type.White:
-                    break
+                    print("Collission with block of opposite colour")
                 }
             case Block.type.WBR:
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.yIndex == 0) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
                         testBall.directionToBlock = Ball.direction.Right
                     }
                 case Ball.type.White:
-                    break
+                    print("Collission with block of opposite colour")
                 }
             case Block.type.WTL:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    break
+                    print("Collission with block of opposite colour")
                 case Ball.type.White:
                     if (currentblock.yIndex == 0) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
@@ -140,10 +143,11 @@ class GameScene: SKScene {
             case Block.type.WTR:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    break
+                    print("Collission with block of opposite colour")
                 case Ball.type.White:
                     if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
@@ -156,10 +160,11 @@ class GameScene: SKScene {
             case Block.type.WBL:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    break
+                    print("Collission with block of opposite colour")
                 case Ball.type.White:
                     if (currentblock.yIndex == 0) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
@@ -169,10 +174,11 @@ class GameScene: SKScene {
             case Block.type.WBR:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    break
+                    print("Collission with block of opposite colour")
                 case Ball.type.White:
                     if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
@@ -183,27 +189,29 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
                         testBall.directionToBlock = Ball.direction.Left
                     }
                 case Ball.type.White:
-                    break
+                    print("Collission with block of opposite colour")
                 }
             case Block.type.WTR:
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.yIndex == 0) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
                         testBall.directionToBlock = Ball.direction.Right
                     }
                 case Ball.type.White:
-                    break
+                    print("Collission with block of opposite colour")
                 }
             }
         case Ball.direction.Left:
@@ -211,10 +219,11 @@ class GameScene: SKScene {
             case Block.type.WBL:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    break
+                    print("Collission with block of opposite colour")
                 case Ball.type.White:
                     if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
@@ -225,35 +234,44 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.xIndex == 0) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
                         testBall.directionToBlock = Ball.direction.Bottom
                     }
                 case Ball.type.White:
-                    break
+                    print("Collission with block of opposite colour")
                 }
             case Block.type.WTL:
-                if (currentblock.xIndex == 0) {
-                    print("not gonna dear")
-                    testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
-                } else {
-                    testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
-                    testBall.directionToBlock = Ball.direction.Bottom
+                switch theBall.ballType {
+                case Ball.type.Black:
+                    print("Collission with block of opposite colour")
+                case Ball.type.White:
+                    if (currentblock.xIndex == 0) {
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
+                        testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                    } else {
+                        testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
+                        testBall.directionToBlock = Ball.direction.Bottom
+                    }
                 }
+
             case Block.type.WTR:
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
                         testBall.directionToBlock = Ball.direction.Top
                     }
                 case Ball.type.White:
-                    break
+                    print("Collission with block of opposite colour")
                 }
             }
         case Ball.direction.Right:
@@ -262,22 +280,24 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.xIndex == 0) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
                         testBall.directionToBlock = Ball.direction.Bottom
                     }
                 case Ball.type.White:
-                    break
+                    print("Collission with block of opposite colour")
                 }
             case Block.type.WBR:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    break
+                    print("Collission with block of opposite colour")
                 case Ball.type.White:
                     if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
@@ -288,22 +308,24 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
                         testBall.directionToBlock = Ball.direction.Top
                     }
                 case Ball.type.White:
-                    break
+                    print("Collission with block of opposite colour")
                 }
             case Block.type.WTR:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    break
+                    print("Collission with block of opposite colour")
                 case Ball.type.White:
                     if (currentblock.xIndex == 0) {
-                        print("not gonna dear")
+                        print("Exiting")
+                        incTotalScore(amount: theBall.score)
                         testBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                     } else {
                         testBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
