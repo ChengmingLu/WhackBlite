@@ -120,7 +120,11 @@ class Ball {
     
     //manage movement of the ball
     func move() {
-        //if outside the grid: return score and self destruction
+        
+        //print("Hey mom I am accessing the block \(nextBlockToAccess.xIndex) \(nextBlockToAccess.yIndex) from centered at \(borderLayer.bounds.origin.x + Grid.blockSize / 6) \(borderLayer.bounds.origin.y + Grid.blockSize / 6) and blocksize is \(Grid.blockSize)")
+        
+        nextBlockToAccess.canRotate = false
+        
         //test move
         var xToMove: CGFloat = 0
         var yToMove: CGFloat = 0
@@ -134,10 +138,12 @@ class Ball {
                     yToMove = lengthToMove
                 case type.White:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
+                        //getting a dummy zero rect block means we are outside the grid: return score and self destruction
                         print("Give me score")
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 }
@@ -152,6 +158,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 }
@@ -163,6 +170,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 case type.White:
@@ -177,6 +185,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 case type.White:
@@ -194,6 +203,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 case type.White:
@@ -208,6 +218,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 case type.White:
@@ -225,6 +236,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 }
@@ -239,6 +251,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 }
@@ -253,6 +266,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 case type.White:
@@ -270,6 +284,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 }
@@ -281,6 +296,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 case type.White:
@@ -298,6 +314,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 }
@@ -315,6 +332,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 }
@@ -326,6 +344,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 case type.White:
@@ -343,6 +362,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 }
@@ -354,6 +374,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
+                    nextBlockToAccess.canRotate = true
                     retire()
                     return
                 case type.White:
@@ -365,10 +386,11 @@ class Ball {
         
         CATransaction.begin()
         CATransaction.setAnimationTimingFunction(CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear))
-        CATransaction.setAnimationDuration(1)
+        CATransaction.setAnimationDuration(2)
         CATransaction.setCompletionBlock {
+            self.nextBlockToAccess.canRotate = true
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "WhatIsNextBlock"), object: self, userInfo: ["currentBlock":self.nextBlockToAccess, "direction":self.directionToBlock])
-            if !(self.nextBlockToAccess.layer.frame == CGRect.zero) {
+            if self.score < 14 && !(self.nextBlockToAccess.layer.frame == CGRect.zero) {
                 self.incScore()
             }
             self.move()
