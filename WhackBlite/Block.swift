@@ -36,12 +36,14 @@ class Block {
     var blockType: type
     var cornerRadiusSetting: CGFloat = 0
     var size: CGFloat
-    var canRotate: Bool
+    private var canRotate: Bool //used only for rotation interval control, not by other class
     var shapeLayer: CAShapeLayer
+    var ballAccessCount: Int
     let xIndex: Int
     let yIndex: Int
 
     init(initRect: CGRect, typeOfBlock: type, x: Int, y: Int) {
+        ballAccessCount = 0
         screenScale = UIScreen.main.bounds
         layer = CALayer()
         layer.backgroundColor = UIColor.white.cgColor

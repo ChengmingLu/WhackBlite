@@ -87,7 +87,7 @@ class GameScene: SKScene {
             for c in 0..<4 {
                 if mainGrid.blocks[r][c].layer.frame.contains((touches.first?.location(in: self.view))!) {
                     //NSLog("GS: touched at row %d, coloum %d, rotating", r, c)
-                    if mainGrid.blocks[r][c].canRotate {
+                    if canBlockRotate(theBlock: mainGrid.blocks[r][c]) {
                         mainGrid.blocks[r][c].rotateClockwise90()
                         //testBall.test_resetPosition()
                     }
@@ -98,7 +98,10 @@ class GameScene: SKScene {
         
         //testBall.move()
         if canSpawnBall {
-            spawnAndStartBall()
+            var ballSpawnedSuccessfully = spawnAndStartBall() //this is so that the ball won't spawn at positions like at top of first block with blockType WBR or WTL, which won't increase the ball's score at all
+            while !ballSpawnedSuccessfully {
+                ballSpawnedSuccessfully = spawnAndStartBall()
+            }
             canSpawnBall = false
         }
         //add a ball whenever we touch somewhere else
@@ -129,7 +132,7 @@ class GameScene: SKScene {
         updateTotalScore()
     }
     
-    func spawnAndStartBall() {
+    func spawnAndStartBall() -> Bool {
         //testing
         var testBall: Ball = Ball.init(initRect: CGRect.zero, ofType: Ball.type.randomType(), toBlock: Block.init(initRect: CGRect.zero, typeOfBlock: Block.type.randomType(), x:0, y:0), fromDirection: Ball.direction.randomDirection())
         let ballDiameter = Grid.blockSize / 3 //did not use radius since height and width need whole diameter
@@ -138,9 +141,20 @@ class GameScene: SKScene {
         var ballTypeToSpawn: Ball.type
         switch positionToSpawn {
         case possibleSpawns.TopFirst:
-            if (mainGrid.blocks[0][0].blockType == Block.type.WBL || mainGrid.blocks[0][0].blockType == Block.type.WBR) {
+            /*if (mainGrid.blocks[0][0].blockType == Block.type.WBL || mainGrid.blocks[0][0].blockType == Block.type.WBR) {
                 ballTypeToSpawn = Ball.type.Black
             } else {
+                ballTypeToSpawn = Ball.type.White
+            }*/
+            //we replace if with switch only for blocks that sit at the corner because in some cases scoring is not possible
+            switch mainGrid.blocks[0][0].blockType {
+            case Block.type.WBL:
+                ballTypeToSpawn = Ball.type.Black
+            case Block.type.WBR:
+                return false
+            case Block.type.WTL:
+                return false
+            case Block.type.WTR:
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Top
@@ -162,18 +176,40 @@ class GameScene: SKScene {
             directionToSpawn = Ball.direction.Top
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][2].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][2].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][2], fromDirection: directionToSpawn)
         case possibleSpawns.TopFourth:
-            if (mainGrid.blocks[0][3].blockType == Block.type.WBL || mainGrid.blocks[0][3].blockType == Block.type.WBR) {
+            /*if (mainGrid.blocks[0][3].blockType == Block.type.WBL || mainGrid.blocks[0][3].blockType == Block.type.WBR) {
                 ballTypeToSpawn = Ball.type.Black
             } else {
                 ballTypeToSpawn = Ball.type.White
+             }*/
+            //we replace if with switch only for blocks that sit at the corner because in some cases scoring is not possible
+            switch mainGrid.blocks[0][3].blockType {
+            case Block.type.WBL:
+                return false
+            case Block.type.WBR:
+                ballTypeToSpawn = Ball.type.Black
+            case Block.type.WTL:
+                ballTypeToSpawn = Ball.type.White
+            case Block.type.WTR:
+                return false
             }
             directionToSpawn = Ball.direction.Top
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][3].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][3].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][3], fromDirection: directionToSpawn)
         case possibleSpawns.LeftFirst:
-            if (mainGrid.blocks[0][0].blockType == Block.type.WBR || mainGrid.blocks[0][0].blockType == Block.type.WTR) {
+            /*if (mainGrid.blocks[0][0].blockType == Block.type.WBR || mainGrid.blocks[0][0].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
             } else {
                 ballTypeToSpawn = Ball.type.White
+             }*/
+            //we replace if with switch only for blocks that sit at the corner because in some cases scoring is not possible
+            switch mainGrid.blocks[0][0].blockType {
+            case Block.type.WBL:
+                ballTypeToSpawn = Ball.type.White
+            case Block.type.WBR:
+                return false
+            case Block.type.WTL:
+                return false
+            case Block.type.WTR:
+                ballTypeToSpawn = Ball.type.Black
             }
             directionToSpawn = Ball.direction.Left
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][0], fromDirection: directionToSpawn)
@@ -194,18 +230,40 @@ class GameScene: SKScene {
             directionToSpawn = Ball.direction.Left
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[2][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[2][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[2][0], fromDirection: directionToSpawn)
         case possibleSpawns.LeftFourth:
-            if (mainGrid.blocks[3][0].blockType == Block.type.WBR || mainGrid.blocks[3][0].blockType == Block.type.WTR) {
+            /*if (mainGrid.blocks[3][0].blockType == Block.type.WBR || mainGrid.blocks[3][0].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
             } else {
                 ballTypeToSpawn = Ball.type.White
+            }*/
+            //we replace if with switch only for blocks that sit at the corner because in some cases scoring is not possible
+            switch mainGrid.blocks[3][0].blockType {
+            case Block.type.WBL:
+                return false
+            case Block.type.WBR:
+                ballTypeToSpawn = Ball.type.Black
+            case Block.type.WTL:
+                ballTypeToSpawn = Ball.type.White
+            case Block.type.WTR:
+                return false
             }
             directionToSpawn = Ball.direction.Left
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[3][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][0], fromDirection: directionToSpawn)
         case possibleSpawns.BottomFirst:
-            if (mainGrid.blocks[3][0].blockType == Block.type.WTL || mainGrid.blocks[3][0].blockType == Block.type.WTR) {
+            /*if (mainGrid.blocks[3][0].blockType == Block.type.WTL || mainGrid.blocks[3][0].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
             } else {
                 ballTypeToSpawn = Ball.type.White
+            }*/
+            //we replace if with switch only for blocks that sit at the corner because in some cases scoring is not possible
+            switch mainGrid.blocks[3][0].blockType {
+            case Block.type.WBL:
+                return false
+            case Block.type.WBR:
+                ballTypeToSpawn = Ball.type.White
+            case Block.type.WTL:
+                ballTypeToSpawn = Ball.type.Black
+            case Block.type.WTR:
+                return false
             }
             directionToSpawn = Ball.direction.Bottom
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][0].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][0], fromDirection: directionToSpawn)
@@ -226,18 +284,40 @@ class GameScene: SKScene {
             directionToSpawn = Ball.direction.Bottom
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][2].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][2].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][2], fromDirection: directionToSpawn)
         case possibleSpawns.BottomFourth:
-            if (mainGrid.blocks[3][3].blockType == Block.type.WTL || mainGrid.blocks[3][3].blockType == Block.type.WTR) {
+            /*if (mainGrid.blocks[3][3].blockType == Block.type.WTL || mainGrid.blocks[3][3].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
             } else {
                 ballTypeToSpawn = Ball.type.White
+            }*/
+            //we replace if with switch only for blocks that sit at the corner because in some cases scoring is not possible
+            switch mainGrid.blocks[3][3].blockType {
+            case Block.type.WBL:
+                ballTypeToSpawn = Ball.type.White
+            case Block.type.WBR:
+                return false
+            case Block.type.WTL:
+                return false
+            case Block.type.WTR:
+                ballTypeToSpawn = Ball.type.Black
             }
             directionToSpawn = Ball.direction.Bottom
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][3].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][3].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][3], fromDirection: directionToSpawn)
         case possibleSpawns.RightFirst:
-            if (mainGrid.blocks[0][3].blockType == Block.type.WTL || mainGrid.blocks[0][3].blockType == Block.type.WBL) {
+            /*if (mainGrid.blocks[0][3].blockType == Block.type.WTL || mainGrid.blocks[0][3].blockType == Block.type.WBL) {
                 ballTypeToSpawn = Ball.type.Black
             } else {
                 ballTypeToSpawn = Ball.type.White
+            }*/
+            //we replace if with switch only for blocks that sit at the corner because in some cases scoring is not possible
+            switch mainGrid.blocks[0][3].blockType {
+            case Block.type.WBL:
+                return false
+            case Block.type.WBR:
+                ballTypeToSpawn = Ball.type.White
+            case Block.type.WTL:
+                ballTypeToSpawn = Ball.type.Black
+            case Block.type.WTR:
+                return false
             }
             directionToSpawn = Ball.direction.Right
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[0][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][3], fromDirection: directionToSpawn)
@@ -258,9 +338,20 @@ class GameScene: SKScene {
             directionToSpawn = Ball.direction.Right
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[2][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[2][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[2][3], fromDirection: directionToSpawn)
         case possibleSpawns.RightFourth:
-            if (mainGrid.blocks[3][3].blockType == Block.type.WTL || mainGrid.blocks[3][3].blockType == Block.type.WBL) {
+            /*if (mainGrid.blocks[3][3].blockType == Block.type.WTL || mainGrid.blocks[3][3].blockType == Block.type.WBL) {
                 ballTypeToSpawn = Ball.type.Black
             } else {
+                ballTypeToSpawn = Ball.type.White
+            }*/
+            //we replace if with switch only for blocks that sit at the corner because in some cases scoring is not possible
+            switch mainGrid.blocks[3][3].blockType {
+            case Block.type.WBL:
+                ballTypeToSpawn = Ball.type.Black
+            case Block.type.WBR:
+                return false
+            case Block.type.WTL:
+                return false
+            case Block.type.WTR:
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Right
@@ -275,14 +366,15 @@ class GameScene: SKScene {
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) { 
             testBall.move()
         }
+        return true
     }
         
     func getNextBlockWithCurrentBlockIndex(note: Notification) {
-        print("received note in getNextBlockWithCurrentBlockIndex")
         let userInformation = note.userInfo as NSDictionary?
         let direction = userInformation?.object(forKey: "direction") as! Ball.direction
         let currentblock = userInformation?.object(forKey: "currentBlock") as! Block
         let theBall = note.object as! Ball
+        print("received note in getNextBlockWithCurrentBlockIndex, current ball score \(theBall.score)")
         switch direction {
         case Ball.direction.Top:
             switch currentblock.blockType {
@@ -554,5 +646,9 @@ class GameScene: SKScene {
                 }
             }
         }
+    }
+    
+    func canBlockRotate(theBlock: Block) -> Bool {
+        return theBlock.ballAccessCount == 0 ? true : false
     }
 }

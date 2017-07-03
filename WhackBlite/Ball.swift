@@ -123,7 +123,7 @@ class Ball {
         
         //print("Hey mom I am accessing the block \(nextBlockToAccess.xIndex) \(nextBlockToAccess.yIndex) from centered at \(borderLayer.bounds.origin.x + Grid.blockSize / 6) \(borderLayer.bounds.origin.y + Grid.blockSize / 6) and blocksize is \(Grid.blockSize)")
         
-        nextBlockToAccess.canRotate = false
+        nextBlockToAccess.ballAccessCount += 1
         
         //test move
         var xToMove: CGFloat = 0
@@ -143,7 +143,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 }
@@ -158,7 +158,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 }
@@ -170,7 +170,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 case type.White:
@@ -185,7 +185,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 case type.White:
@@ -203,7 +203,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 case type.White:
@@ -218,7 +218,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 case type.White:
@@ -236,7 +236,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 }
@@ -251,7 +251,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 }
@@ -266,7 +266,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 case type.White:
@@ -284,7 +284,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 }
@@ -296,7 +296,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 case type.White:
@@ -314,7 +314,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 }
@@ -332,7 +332,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 }
@@ -344,7 +344,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 case type.White:
@@ -362,7 +362,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 }
@@ -374,7 +374,7 @@ class Ball {
                     } else {
                         print("Not accessible")
                     }
-                    nextBlockToAccess.canRotate = true
+                    nextBlockToAccess.ballAccessCount -= 1
                     retire()
                     return
                 case type.White:
@@ -388,12 +388,12 @@ class Ball {
         CATransaction.setAnimationTimingFunction(CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear))
         CATransaction.setAnimationDuration(2)
         CATransaction.setCompletionBlock {
-            self.nextBlockToAccess.canRotate = true
+            self.nextBlockToAccess.ballAccessCount -= 1
             print("We are posting a note with self being \(self) and next block being \(self.nextBlockToAccess)")
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "WhatIsNextBlock"), object: self, userInfo: ["currentBlock":self.nextBlockToAccess, "direction":self.directionToBlock])
-            if self.score < 14 && !(self.nextBlockToAccess.layer.frame == CGRect.zero) {
-                self.incScore()
-            }
+            //if self.score < 14 && !(self.nextBlockToAccess.layer.frame == CGRect.zero) {
+            //    self.incScore()
+            //} now only increase score if the ball turns
             self.move()
         }
         borderLayer.transform = CATransform3DTranslate(borderLayer.transform, xToMove, yToMove, 0)
@@ -410,6 +410,7 @@ class Ball {
         layer.removeFromSuperlayer()
         borderLayer.removeFromSuperlayer()
     }
+    
 }
 
 
