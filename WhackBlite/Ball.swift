@@ -389,6 +389,7 @@ class Ball {
         CATransaction.setAnimationDuration(2)
         CATransaction.setCompletionBlock {
             self.nextBlockToAccess.canRotate = true
+            print("We are posting a note with self being \(self) and next block being \(self.nextBlockToAccess)")
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "WhatIsNextBlock"), object: self, userInfo: ["currentBlock":self.nextBlockToAccess, "direction":self.directionToBlock])
             if self.score < 14 && !(self.nextBlockToAccess.layer.frame == CGRect.zero) {
                 self.incScore()

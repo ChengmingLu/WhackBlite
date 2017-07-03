@@ -271,13 +271,14 @@ class GameScene: SKScene {
         
         testBall.addLayersToView(toView: self.view!)
         NotificationCenter.default.addObserver(self, selector: #selector(getNextBlockWithCurrentBlockIndex(note:)), name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: testBall)
-        //testBall.move()
+        //NotificationCenter
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) { 
             testBall.move()
         }
     }
         
     func getNextBlockWithCurrentBlockIndex(note: Notification) {
+        print("received note in getNextBlockWithCurrentBlockIndex")
         let userInformation = note.userInfo as NSDictionary?
         let direction = userInformation?.object(forKey: "direction") as! Ball.direction
         let currentblock = userInformation?.object(forKey: "currentBlock") as! Block
@@ -292,6 +293,8 @@ class GameScene: SKScene {
                         print("Exiting TOP WBL, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
                         theBall.directionToBlock = Ball.direction.Left
@@ -306,6 +309,8 @@ class GameScene: SKScene {
                         print("Exiting TOP WBR, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
                         theBall.directionToBlock = Ball.direction.Right
@@ -322,6 +327,8 @@ class GameScene: SKScene {
                         print("Exiting TOP WTL, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
                         theBall.directionToBlock = Ball.direction.Right
@@ -336,6 +343,8 @@ class GameScene: SKScene {
                         print("Exiting TOP WTR, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
                         theBall.directionToBlock = Ball.direction.Left
@@ -353,6 +362,8 @@ class GameScene: SKScene {
                         print("Exiting BOT WBL, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
                         theBall.directionToBlock = Ball.direction.Right
@@ -367,6 +378,8 @@ class GameScene: SKScene {
                         print("Exiting BOT WBR, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
                         theBall.directionToBlock = Ball.direction.Left
@@ -379,6 +392,8 @@ class GameScene: SKScene {
                         print("Exiting BOT WTL, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
                         theBall.directionToBlock = Ball.direction.Left
@@ -393,6 +408,8 @@ class GameScene: SKScene {
                         print("Exiting BOT WTR, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
                         theBall.directionToBlock = Ball.direction.Right
@@ -412,6 +429,8 @@ class GameScene: SKScene {
                         print("Exiting LEF WBL, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Top
@@ -424,6 +443,8 @@ class GameScene: SKScene {
                         print("Exiting LEF WBR, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Bottom
@@ -440,6 +461,8 @@ class GameScene: SKScene {
                         print("Exiting LEF WTL, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Bottom
@@ -453,6 +476,8 @@ class GameScene: SKScene {
                         print("Exiting LEF WTR, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Top
@@ -470,6 +495,8 @@ class GameScene: SKScene {
                         print("Exiting RIG WBL, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Bottom
@@ -486,6 +513,8 @@ class GameScene: SKScene {
                         print("Exiting RIG WBR, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Top
@@ -498,6 +527,8 @@ class GameScene: SKScene {
                         print("Exiting RIG WTL, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Top
@@ -514,6 +545,8 @@ class GameScene: SKScene {
                         print("Exiting RIG WTR, the ball had score \(theBall.score)")
                         incTotalScore(amount: theBall.score)
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
+                        //now we should remove observer I guess
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Bottom
