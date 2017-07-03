@@ -112,7 +112,7 @@ class Block {
         CATransaction.begin()
         CATransaction.setCompletionBlock {
             self.canRotate = true
-            self.blockType = type(rawValue: (self.blockType.rawValue + 1) % type.count)!
+            self.blockType = Block.type(rawValue: (self.blockType.rawValue + 1) % type.count)!
         }
         layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)
         CATransaction.commit()
