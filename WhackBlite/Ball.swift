@@ -402,29 +402,10 @@ class Ball {
         CATransaction.commit()
     }
     
-    
-    
     //suicide
     func retire() {
         scoreLabel.removeFromSuperlayer()
         layer.removeFromSuperlayer()
         borderLayer.removeFromSuperlayer()
     }
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

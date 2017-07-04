@@ -49,16 +49,19 @@ class GameScene: SKScene {
     }
     
     let maxBallScoreAllowed: Int = 5
-    var mainGrid: Grid = Grid.init(withNumberOfRows: 4, withNumberOfColumns: 4, withBlockSize: UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height ? (UIScreen.main.bounds.size.width - 40) / 4 : (UIScreen.main.bounds.size.height - 40) / 4)
+    var mainGrid: Grid = Grid.init(withBlockSize: UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height ? (UIScreen.main.bounds.size.width - 40) / 4 : (UIScreen.main.bounds.size.height - 40) / 4)
     var totalScoreLabel: CATextLayer = CATextLayer()
+    var timerLabel: CATextLayer = CATextLayer()
     var totalScore: Int = 0
+    var timeRemaining: Int = 60
     var canSpawnBall: Bool = true
+    var gameInProgress: Bool = true
     //var testBall: Ball = Ball.init(initRect: CGRect.zero, ofType: Ball.type.randomType(), toBlock: Block.init(initRect: CGRect.zero, typeOfBlock: Block.type.randomType(), x:0, y:0), fromDirection: Ball.direction.randomDirection())
     
     override func didMove(to view: SKView) {
 
         //init total score label
-        totalScoreLabel.frame = CGRect(x: mainGrid.blocks[0][0].layer.frame.origin.x, y: mainGrid.blocks[0][0].layer.frame.origin.y - Grid.blockSize / 2, width: mainGrid.blocks[0][0].layer.frame.size.width / 2, height: mainGrid.blocks[0][0].layer.frame.size.height)
+        totalScoreLabel.frame = CGRect(x: mainGrid.grid.frame.origin.x, y: mainGrid.grid.frame.origin.y - Grid.blockSize / 2, width: Grid.blockSize / 2, height: Grid.blockSize / 2)
         resetTotalScore()
         totalScoreLabel.contentsScale = UIScreen.main.scale
         totalScoreLabel.alignmentMode = kCAAlignmentCenter
@@ -70,46 +73,60 @@ class GameScene: SKScene {
         totalScoreLabel.fontSize = 20
         self.view?.layer.addSublayer(totalScoreLabel)
         
+        //init timer label
+        timerLabel.frame = CGRect(x: totalScoreLabel.frame.origin.x + Grid.blockSize * 3.5, y:totalScoreLabel.frame.origin.y, width: Grid.blockSize / 2, height: Grid.blockSize / 2)
+        resetTimerLabel()
+        timerLabel.contentsScale = UIScreen.main.scale
+        timerLabel.alignmentMode = kCAAlignmentCenter
+        timerLabel.foregroundColor = UIColor.white.cgColor
+        //timer font
+        timerLabel.font = fontStringRef
+        timerLabel.fontSize = totalScoreLabel.fontSize
+        self.view?.layer.addSublayer(timerLabel)
+        startTimer()
         //add grid to view
         mainGrid.addGridToView(toView: self.view!)
         
         
         //testball
         //testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x + Grid.blockSize / 2 - Grid.blockSize / 2 / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y - Grid.blockSize / 2 / 2, width:Grid.blockSize / 2, height:Grid.blockSize / 2), ofType: Ball.type.randomType(), toBlock: mainGrid.blocks[0][0], fromDirection: Ball.direction.Top)
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         //NSLog("GS: touched began")
         //incTotalScore()
         
-        
-        for r in 0..<4 {
-            for c in 0..<4 {
-                if mainGrid.blocks[r][c].layer.frame.contains((touches.first?.location(in: self.view))!) {
-                    //NSLog("GS: touched at row %d, coloum %d, rotating", r, c)
-                    if canBlockRotate(theBlock: mainGrid.blocks[r][c]) {
-                        mainGrid.blocks[r][c].rotateClockwise90()
-                        //testBall.test_resetPosition()
+        if gameInProgress {
+            for r in 0..<4 {
+                for c in 0..<4 {
+                    if mainGrid.blocks[r][c].layer.frame.contains((touches.first?.location(in: self.view))!) {
+                        //NSLog("GS: touched at row %d, coloum %d, rotating", r, c)
+                        if canBlockRotate(theBlock: mainGrid.blocks[r][c]) {
+                            mainGrid.blocks[r][c].rotateClockwise90()
+                            //testBall.test_resetPosition()
+                        }
+                        return
                     }
-                    return
                 }
             }
-        }
-        
-        //testBall.move()
-        if canSpawnBall {
-            var ballSpawnedSuccessfully = spawnAndStartBall() //this is so that the ball won't spawn at positions like at top of first block with blockType WBR or WTL, which won't increase the ball's score at all
-            while !ballSpawnedSuccessfully {
-                ballSpawnedSuccessfully = spawnAndStartBall()
+            
+            //testBall.move()
+            if canSpawnBall {
+                var ballSpawnedSuccessfully = spawnAndStartBall() //this is so that the ball won't spawn at positions like at top of first block with blockType WBR or WTL, which won't increase the ball's score at all
+                while !ballSpawnedSuccessfully {
+                    ballSpawnedSuccessfully = spawnAndStartBall()
+                }
+                canSpawnBall = false
             }
-            canSpawnBall = false
+            //add a ball whenever we touch somewhere else
         }
-        //add a ball whenever we touch somewhere else
+
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        canSpawnBall = true
+        if gameInProgress {
+            canSpawnBall = true
+        }
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -131,6 +148,39 @@ class GameScene: SKScene {
     func incTotalScore(amount: Int) {
         totalScore += amount
         updateTotalScore()
+    }
+    
+    func updateTimerLabel() {
+        timerLabel.string = "\(timeRemaining)"
+    }
+    
+    func resetTimerLabel() {
+        timeRemaining = 2
+        updateTimerLabel()
+    }
+    
+    func decTimeRemaining() {
+        timeRemaining -= 1
+        updateTimerLabel()
+    }
+    
+    func startTimer() {
+        let wait = SKAction.wait(forDuration: TimeInterval(1))
+        let run = SKAction.run {
+            if self.timeRemaining < 1 {
+                self.removeAction(forKey: "TimerAction")
+                
+                self.totalScoreLabel.frame.origin = CGPoint(x: UIScreen.main.bounds.width / 2 - self.totalScoreLabel.frame.width / 2, y: UIScreen.main.bounds.height / 2 - self.totalScoreLabel.frame.height / 2)
+                //self.totalScoreLabel.fontSize = 30
+                self.view?.layer.addSublayer(self.totalScoreLabel)
+                
+                self.timerLabel.removeFromSuperlayer()
+                self.mainGrid.setBlocksToResultScreen()
+            }
+            self.decTimeRemaining()
+        }
+        let repeatedAction = SKAction.repeatForever(SKAction.sequence([wait, run]))
+        self.run(repeatedAction, withKey: "TimerAction")
     }
     
     func spawnAndStartBall() -> Bool {

@@ -59,6 +59,7 @@ class Block {
         layer.addSublayer(shapeLayer)
     }
     
+    //this function is only used by Grid for initialization since it has no animation
     func setTypeAndRedraw(typeToSet: type) {
         blockType = typeToSet
         let TLPoint: CGPoint = layer.bounds.origin
@@ -115,6 +116,63 @@ class Block {
             self.blockType = Block.type(rawValue: (self.blockType.rawValue + 1) % type.count)!
         }
         layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)
+        CATransaction.commit()
+    }
+    
+    //this function is used by the grid to rotate its blocks to form a result screen
+    func rotateToType(toType: type) {
+        canRotate = false
+        CATransaction.begin()
+        CATransaction.setCompletionBlock { 
+            self.canRotate = true
+            self.blockType = toType
+        }
+        switch blockType {
+        case type.WBL:
+            switch toType {
+            case type.WBL:
+                break
+            case type.WBR:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(-Double.pi / 2), 0, 0, 1)
+            case type.WTL:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)
+            case type.WTR:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi), 0, 0, 1)
+            }
+        case type.WBR:
+            switch toType {
+            case type.WBL:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)
+            case type.WBR:
+                break
+            case type.WTL:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi), 0, 0, 1)
+            case type.WTR:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(-Double.pi / 2), 0, 0, 1)
+            }
+        case type.WTL:
+            switch toType {
+            case type.WBL:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(-Double.pi / 2), 0, 0, 1)
+            case type.WBR:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi), 0, 0, 1)
+            case type.WTL:
+                break
+            case type.WTR:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)
+            }
+        case type.WTR:
+            switch toType {
+            case type.WBL:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi), 0, 0, 1)
+            case type.WBR:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)
+            case type.WTL:
+                layer.transform = CATransform3DRotate(layer.transform, CGFloat(-Double.pi / 2), 0, 0, 1)
+            case type.WTR:
+                break
+            }
+        }
         CATransaction.commit()
     }
 }
