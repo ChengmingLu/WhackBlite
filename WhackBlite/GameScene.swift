@@ -142,7 +142,7 @@ class GameScene: SKScene {
     }
     
     func resetTimerLabel() {
-        timeRemaining = 10
+        timeRemaining = 60
         updateTimerLabel()
     }
     
