@@ -14,7 +14,7 @@ class Grid {
     var screenRect: CGRect
     var grid: CALayer
     var blocks = [[Block]]()
-    let numberOfRows: Int = 4
+    let numberOfRows: Int = 4 //fixed for now, not planning to change these
     let numberOfColumns: Int = 4
     static var blockSize: CGFloat = 0
     var count: Int
@@ -62,35 +62,52 @@ class Grid {
     
     //this is hardcoded to assume the grid is 4X4
     func setBlocksToResultScreen() {
-        blocks[0][0].rotateToType(toType: Block.type.WBR)
-        blocks[0][1].rotateToType(toType: Block.type.WBL)
-        blocks[0][2].rotateToType(toType: Block.type.WBR)
-        blocks[0][3].rotateToType(toType: Block.type.WBL)
+        blocks[0][0].rotateToAndSetType(toType: Block.type.WBR)
+        blocks[0][1].rotateToAndSetType(toType: Block.type.WBL)
+        blocks[0][2].rotateToAndSetType(toType: Block.type.WBR)
+        blocks[0][3].rotateToAndSetType(toType: Block.type.WBL)
         
-        blocks[1][0].rotateToType(toType: Block.type.WTR)
-        blocks[1][1].rotateToType(toType: Block.type.WTL)
-        blocks[1][2].rotateToType(toType: Block.type.WTR)
-        blocks[1][3].rotateToType(toType: Block.type.WTL)
+        blocks[1][0].rotateToAndSetType(toType: Block.type.WTR)
+        blocks[1][1].rotateToAndSetType(toType: Block.type.WTL)
+        blocks[1][2].rotateToAndSetType(toType: Block.type.WTR)
+        blocks[1][3].rotateToAndSetType(toType: Block.type.WTL)
         
-        blocks[2][0].rotateToType(toType: Block.type.WBR)
-        blocks[2][1].rotateToType(toType: Block.type.WBL)
-        blocks[2][2].rotateToType(toType: Block.type.WBR)
-        blocks[2][3].rotateToType(toType: Block.type.WBL)
+        blocks[2][0].rotateToAndSetType(toType: Block.type.WBR)
+        blocks[2][1].rotateToAndSetType(toType: Block.type.WBL)
+        blocks[2][2].rotateToAndSetType(toType: Block.type.WBR)
+        blocks[2][3].rotateToAndSetType(toType: Block.type.WBL)
         
-        blocks[3][0].rotateToType(toType: Block.type.WTR)
-        blocks[3][1].rotateToType(toType: Block.type.WTL)
-        blocks[3][2].rotateToType(toType: Block.type.WTR)
-        blocks[3][3].rotateToType(toType: Block.type.WTL)
+        blocks[3][0].rotateToAndSetType(toType: Block.type.WTR)
+        blocks[3][1].rotateToAndSetType(toType: Block.type.WTL)
+        blocks[3][2].rotateToAndSetType(toType: Block.type.WTR)
+        blocks[3][3].rotateToAndSetType(toType: Block.type.WTL)
         
         CATransaction.begin()
         CATransaction.setCompletionBlock { 
-            
+            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "GridFinishedAnimation"), object: self)
         }
+        CATransaction.setAnimationDuration(0.5)
         //print("block0 has frame origin of \(blocks[0][0].layer.frame.origin)with superlayer \(blocks[0][0].layer.superlayer)")
         //grid.transform = CATransform3DMakeTranslation(UIScreen.main.bounds.width / 2, UIScreen.main.bounds.height / 2, 0)
         //grid.transform = CATransform3DTranslate(grid.transform, Grid.blockSize * 4 / (sqrt(2)), 0, 0)
         grid.transform = CATransform3DRotate(grid.transform, CGFloat(Double.pi / 4), 0, 0, 1)
         //grid.transform = CATransform3DTranslate(grid.transform, Grid.blockSize * 4, 0, 0)
+        CATransaction.commit()
+    }
+    
+    func resetGridForNewGame() {
+        for r in 0..<numberOfRows {
+            for c in 0..<numberOfColumns {
+                //blocks[r][c].setTypeAndRedraw(typeToSet: Block.type.randomType())
+                blocks[r][c].rotateToAndSetType(toType: Block.type.randomType())
+            }
+        }
+        CATransaction.begin()
+        CATransaction.setCompletionBlock { 
+            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "GridFinishedReset"), object: self)
+        }
+        CATransaction.setAnimationDuration(0.5)
+        grid.transform = CATransform3DRotate(grid.transform, CGFloat(-Double.pi / 4), 0, 0, 1)
         CATransaction.commit()
     }
 }

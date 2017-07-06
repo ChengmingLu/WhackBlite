@@ -120,7 +120,7 @@ class Block {
     }
     
     //this function is used by the grid to rotate its blocks to form a result screen
-    func rotateToType(toType: type) {
+    func rotateToAndSetType(toType: type) {
         canRotate = false
         CATransaction.begin()
         CATransaction.setCompletionBlock { 
