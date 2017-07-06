@@ -95,12 +95,13 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         //NSLog("GS: touched began")
         //incTotalScore()
-        
+        let touchLocation = touches.first?.location(in: self.view)
+        let xTouchLoc = touchLocation?.x
+        let yTouchLoc = touchLocation?.y
         if gameInProgress {
             for r in 0..<4 {
                 for c in 0..<4 {
-                    if mainGrid.blocks[r][c].layer.frame.contains((touches.first?.location(in: self.view))!) {
-                        //NSLog("GS: touched at row %d, coloum %d, rotating", r, c)
+                    if mainGrid.blocks[r][c].layer.frame.contains(CGPoint(x: xTouchLoc! - mainGrid.grid.frame.origin.x, y: yTouchLoc! - mainGrid.grid.frame.origin.y)) {//to calibrate location due to difference introduced by mainGrid's grid layer
                         if canBlockRotate(theBlock: mainGrid.blocks[r][c]) {
                             mainGrid.blocks[r][c].rotateClockwise90()
                             //testBall.test_resetPosition()
@@ -155,7 +156,7 @@ class GameScene: SKScene {
     }
     
     func resetTimerLabel() {
-        timeRemaining = 2
+        timeRemaining = 60
         updateTimerLabel()
     }
     
@@ -411,7 +412,8 @@ class GameScene: SKScene {
         
         //testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: mainGrid.blocks[0][0].blockType == Block.type.WBL || mainGrid.blocks[0][0].blockType == Block.type.WBR ? Ball.type.Black : Ball.type.White, toBlock: mainGrid.blocks[0][0], fromDirection: Ball.direction.Top)
         
-        testBall.addLayersToView(toView: self.view!)
+        //testBall.addLayersToView(toView: self.view!)
+        testBall.addLayersToLayer(toLayer: mainGrid.grid)
         NotificationCenter.default.addObserver(self, selector: #selector(getNextBlockWithCurrentBlockIndex(note:)), name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: testBall)
         //NotificationCenter
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) { 

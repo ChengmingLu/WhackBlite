@@ -101,6 +101,12 @@ class Ball {
         toView.layer.addSublayer(scoreLabel)
     }
     
+    func addLayersToLayer(toLayer: CALayer) {
+        toLayer.addSublayer(borderLayer)
+        toLayer.addSublayer(layer)
+        toLayer.addSublayer(scoreLabel)
+    }
+    
     // update score Label as the score is changed
     func updateScoreLabel() {
         scoreLabel.string = "\(score)"
