@@ -50,12 +50,14 @@ class GameScene: SKScene {
     
     let maxBallScoreAllowed: Int = 5
     var mainGrid: Grid = Grid.init(withBlockSize: UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height ? (UIScreen.main.bounds.size.width - 40) / 4 : (UIScreen.main.bounds.size.height - 40) / 4)
-    var totalScoreLabel: CATextLayer = CATextLayer()
-    var timerLabel: CATextLayer = CATextLayer()
+    var totalScoreLabel: eCATextLayer = eCATextLayer()
+    var timerLabel: eCATextLayer = eCATextLayer()
+    var highScoreLabel: eCATextLayer = eCATextLayer()
     var totalScore: Int = 0
     var timeRemaining: Int = 60
     var canSpawnBall: Bool = true
     var gameInProgress: Bool = true
+    var canResetGrid: Bool = true
     //var testBall: Ball = Ball.init(initRect: CGRect.zero, ofType: Ball.type.randomType(), toBlock: Block.init(initRect: CGRect.zero, typeOfBlock: Block.type.randomType(), x:0, y:0), fromDirection: Ball.direction.randomDirection())
     
     override func didMove(to view: SKView) {
@@ -96,7 +98,8 @@ class GameScene: SKScene {
                 canSpawnBall = false
             }
             //add a ball whenever we touch somewhere else
-        } else {
+        } else if canResetGrid {
+            canResetGrid = false //prevent the grid from being reset multiple times
             totalScoreLabel.removeFromSuperlayer()
             mainGrid.resetGridForNewGame()
         }
@@ -127,22 +130,23 @@ class GameScene: SKScene {
     
     func incTotalScore(amount: Int) {
         totalScore += amount
+        totalScore = totalScore < 0 ? 0 : totalScore //prevent totalScore from being negative
         updateTotalScore()
     }
     
-    func totalScorePenalty() {
+    /*func totalScorePenalty() {
         if totalScore > 0 {
             totalScore -= 1
         }
         updateTotalScore()
-    }
+    }*/
     
     func updateTimerLabel() {
         timerLabel.string = "\(timeRemaining)"
     }
     
     func resetTimerLabel() {
-        timeRemaining = 60
+        timeRemaining = 30
         updateTimerLabel()
     }
     
@@ -152,7 +156,7 @@ class GameScene: SKScene {
     }
     
     func handleEndGame() {
-
+        canResetGrid = true
     }
     
     func restartGame() {
@@ -199,20 +203,23 @@ class GameScene: SKScene {
     func startTimer() {
         let wait = SKAction.wait(forDuration: TimeInterval(1))
         let run = SKAction.run {
-            if self.timeRemaining < 1 {
-                self.removeAction(forKey: "TimerAction")
-                CATransaction.begin()
-                CATransaction.setDisableActions(true)
-                self.totalScoreLabel.frame.origin = CGPoint(x: UIScreen.main.bounds.width / 2 - self.totalScoreLabel.frame.width / 2, y: UIScreen.main.bounds.height / 2 - self.totalScoreLabel.frame.height / 2)
-                CATransaction.commit()
-                //self.totalScoreLabel.fontSize = 30
-                self.view?.layer.addSublayer(self.totalScoreLabel)
-                self.timerLabel.frame.origin = self.totalScoreLabel.frame.origin
-                self.timerLabel.opacity = 0
-                self.timerLabel.removeFromSuperlayer()
+            if self.timeRemaining < 2 {
                 self.gameInProgress = false
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "NowYouWantToKillYourself"), object: nil)
-                self.mainGrid.setBlocksToResultScreen()
+                self.canResetGrid = false
+                if self.timeRemaining < 1 {
+                    self.removeAction(forKey: "TimerAction")
+                    CATransaction.begin()
+                    CATransaction.setDisableActions(true)
+                    self.totalScoreLabel.frame.origin = CGPoint(x: UIScreen.main.bounds.width / 2 - self.totalScoreLabel.frame.width / 2, y: UIScreen.main.bounds.height / 2 - self.totalScoreLabel.frame.height / 2)
+                    CATransaction.commit()
+                    //self.totalScoreLabel.fontSize = 30
+                    self.view?.layer.addSublayer(self.totalScoreLabel)
+                    self.timerLabel.frame.origin = self.totalScoreLabel.frame.origin
+                    self.timerLabel.opacity = 0
+                    self.timerLabel.removeFromSuperlayer()
+                    NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "NowYouWantToKillYourself"), object: nil)
+                    self.mainGrid.setBlocksToResultScreen()
+                }
             }
             self.decTimeRemaining()
         }
@@ -451,7 +458,7 @@ class GameScene: SKScene {
         //testBall.addLayersToView(toView: self.view!)
         testBall.addLayersToLayer(toLayer: mainGrid.grid)
         NotificationCenter.default.addObserver(self, selector: #selector(getNextBlockWithCurrentBlockIndex(note:)), name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: testBall)
-        NotificationCenter.default.addObserver(self, selector: #selector(totalScorePenalty), name: NSNotification.Name.init(rawValue: "penalizeScore"), object: testBall)
+        //NotificationCenter.default.addObserver(self, selector: #selector(totalScorePenalty), name: NSNotification.Name.init(rawValue: "penalizeScore"), object: testBall)
         //NotificationCenter
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) { 
             testBall.move()
@@ -478,7 +485,7 @@ class GameScene: SKScene {
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
-                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
+                        //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
                         if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) ||  mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
                             theBall.incScore() //we detected a turn
@@ -499,7 +506,7 @@ class GameScene: SKScene {
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
-                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
+                        //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
                         if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
                             theBall.incScore() //we detected a turn
@@ -521,7 +528,7 @@ class GameScene: SKScene {
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
-                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
+                        //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
                         if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
                             theBall.incScore() //we detected a turn
@@ -541,7 +548,7 @@ class GameScene: SKScene {
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
-                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
+                        //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
                         if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
                             theBall.incScore() //we detected a turn
@@ -564,7 +571,7 @@ class GameScene: SKScene {
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
-                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
+                        //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
                         if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
                             theBall.incScore() //we detected a turn
@@ -584,7 +591,7 @@ class GameScene: SKScene {
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
-                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
+                        //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
                         if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
                             theBall.incScore() //we detected a turn
@@ -602,7 +609,7 @@ class GameScene: SKScene {
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
-                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
+                        //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
                         if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
                             theBall.incScore() //we detected a turn
@@ -622,7 +629,7 @@ class GameScene: SKScene {
                         theBall.nextBlockToAccess = Block.init(initRect: CGRect.zero, typeOfBlock: Block.type(rawValue: (currentblock.blockType.rawValue + 2) % Block.type.count)!, x: 0, y: 0) // this basically makes a dummy ball with flipped orientation which blocks the ball from going on further, ideally
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
-                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
+                        //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
                         if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
                             theBall.incScore() //we detected a turn

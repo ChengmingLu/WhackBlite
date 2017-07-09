@@ -50,7 +50,7 @@ class Ball: NSObject {
     let lengthToMove: CGFloat = Grid.blockSize / 2
     let borderOffset: CGFloat = Grid.blockSize / 50
     var score: Int
-    var scoreLabel: CATextLayer
+    var scoreLabel: eCATextLayer
     var ballType: type
     var layer: CALayer
     var borderLayer: CALayer
@@ -62,7 +62,7 @@ class Ball: NSObject {
     //var initialPos: CGPoint
     
     init(initRect: CGRect, ofType: type, toBlock: Block, fromDirection: direction) {
-        score = 0
+        score = arc4random_uniform(3) < 2 ? 0 : -10//this makes 1/3 of -10 ball spawn
         ballType = ofType
         colour = ballType == type.Black ? UIColor.black.cgColor : UIColor.white.cgColor
         borderLayer = CALayer()
@@ -75,7 +75,7 @@ class Ball: NSObject {
         layer.backgroundColor = colour
         layer.cornerRadius = (diameter - borderOffset) / 2 // dis makes a circle, kind of
 
-        scoreLabel = CATextLayer()
+        scoreLabel = eCATextLayer()
         scoreLabel.frame = initRect
         //initialPos = initRect.origin
         nextBlockToAccess = toBlock
@@ -84,7 +84,8 @@ class Ball: NSObject {
         
         
         //indirect initialization
-        resetScore()
+        //resetScore()
+        scoreLabel.string = "\(score)"
         scoreLabel.contentsScale = UIScreen.main.scale
         scoreLabel.alignmentMode = kCAAlignmentCenter
         scoreLabel.foregroundColor = ballType == type.Black ? UIColor.white.cgColor : UIColor.black.cgColor
@@ -92,7 +93,7 @@ class Ball: NSObject {
         let systemFont = UIFont.systemFont(ofSize: 0.0) //size is unimportant here
         let fontStringRef = systemFont.fontName as CFString
         scoreLabel.font = fontStringRef
-        scoreLabel.fontSize =  initRect.size.width * 0.76 //needs to be tested
+        scoreLabel.fontSize =  initRect.size.width * 0.6 //needs to be tested
         //layer.addSublayer(scoreLabel)
         NotificationCenter.default.addObserver(self, selector: #selector(retire), name: NSNotification.Name.init(rawValue: "NowYouWantToKillYourself"), object: nil)
     }
@@ -116,15 +117,15 @@ class Ball: NSObject {
     
     //add 1 to score and update its label
     func incScore() {
-        score += 10
+        score += 1
         updateScoreLabel()
     }
     
     //set score to 0 and update its label
-    func resetScore() {
+    /*func resetScore() {
         score = 0
         updateScoreLabel()
-    }
+    }*/
     
     //suicide
     func retire() {
@@ -157,7 +158,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -173,7 +174,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -186,7 +187,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -202,7 +203,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -221,7 +222,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -237,7 +238,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -256,7 +257,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -272,7 +273,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -288,7 +289,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -307,7 +308,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -320,7 +321,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -339,7 +340,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -358,7 +359,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -371,7 +372,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -390,7 +391,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -403,7 +404,7 @@ class Ball: NSObject {
                         print("Give me score")
                     } else {
                         print("Not accessible")
-                        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
+                        //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
                     retire()
@@ -417,7 +418,7 @@ class Ball: NSObject {
         
         CATransaction.begin()
         CATransaction.setAnimationTimingFunction(CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear))
-        CATransaction.setAnimationDuration(2)
+        CATransaction.setAnimationDuration(3)
         CATransaction.setCompletionBlock {
             self.nextBlockToAccess.ballAccessCount -= 1
             print("We are posting a note with self being \(self) and next block being \(self.nextBlockToAccess)")
