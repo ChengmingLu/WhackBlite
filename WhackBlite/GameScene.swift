@@ -40,6 +40,7 @@ class GameScene: SKScene {
             return possibleSpawns(rawValue: rand)!
         }
     }
+    //var parentVC = UIApplication.shared.keyWindow?.rootViewController
     var mainGrid: Grid = Grid.init(withBlockSize: UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height ? (UIScreen.main.bounds.size.width - 40) / 4 : (UIScreen.main.bounds.size.height - 40) / 4)
     var totalScoreLabel: eCATextLayer = eCATextLayer()
     var timerLabel: eCATextLayer = eCATextLayer()
@@ -49,16 +50,34 @@ class GameScene: SKScene {
     var canSpawnBall: Bool = true
     var gameInProgress: Bool = true
     var canResetGrid: Bool = true
-    var appOpenedForTheFirstTime: Bool = false
+    //var appOpenedForTheFirstTime: Bool = false
     //var testBall: Ball = Ball.init(initRect: CGRect.zero, ofType: Ball.type.randomType(), toBlock: Block.init(initRect: CGRect.zero, typeOfBlock: Block.type.randomType(), x:0, y:0), fromDirection: Ball.direction.randomDirection())
     
     override func didMove(to view: SKView) {
+        //appOpenedForTheFirstTime = true //assume first time lauch so init label does not start timer
         initLabels()
         //add grid to view
         mainGrid.addGridToView(toView: self.view!)
         NotificationCenter.default.addObserver(self, selector: #selector(handleEndGame), name: NSNotification.Name.init(rawValue: "GridFinishedAnimation"), object: mainGrid)
         NotificationCenter.default.addObserver(self, selector: #selector(restartGame), name: NSNotification.Name.init(rawValue: "GridFinishedReset"), object: mainGrid)
-        startTimer()
+/*
+         
+         if (!UserDefaults.standard.bool(forKey: "appFirstLaunched")) {
+         UserDefaults.standard.set(true, forKey: "appFirstLaunched")
+         UserDefaults.standard.synchronize()
+         
+         let alertViewtitle = NSLocalizedString("gameHintTitle", comment: "")
+         let alertViewMessage = NSLocalizedString("gameHint", comment: "")
+         let alertViewButtonTitle = NSLocalizedString("okButton", comment: "")
+         let alertView = UIAlertController.init(title: alertViewtitle, message: alertViewMessage, preferredStyle: UIAlertControllerStyle.alert)
+         let actionButon = UIAlertAction.init(title: alertViewButtonTitle, style: UIAlertActionStyle.default, handler: { (UIAlertAction) in
+         self.startTimer()
+         })
+         alertView.addAction(actionButon)
+         parentVC?.present(alertView, animated: true, completion: nil)
+         
+         }
+         */
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         //NSLog("GS: touched began")
@@ -205,10 +224,7 @@ class GameScene: SKScene {
         //score font
         highScoreLabel.font = fontStringRef
         highScoreLabel.fontSize = totalScoreLabel.fontSize
-        
-        if !appOpenedForTheFirstTime {
-            startTimer()
-        }
+        startTimer()
     }
     
     func startTimer() {
