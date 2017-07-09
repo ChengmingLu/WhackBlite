@@ -19,6 +19,7 @@
 		042F9EA01EE4A1D4008A7F6D /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042F9E9F1EE4A1D4008A7F6D /* Block.swift */; };
 		042F9EA21EE4A1E1008A7F6D /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042F9EA11EE4A1E1008A7F6D /* Grid.swift */; };
 		04D8A4F41EEC736000707AA6 /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D8A4F31EEC736000707AA6 /* Ball.swift */; };
+		04E762E21F12B75C009C7D2B /* eCATextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E762E11F12B75C009C7D2B /* eCATextLayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		042F9E9F1EE4A1D4008A7F6D /* Block.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
 		042F9EA11EE4A1E1008A7F6D /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
 		04D8A4F31EEC736000707AA6 /* Ball.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
+		04E762E11F12B75C009C7D2B /* eCATextLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = eCATextLayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 				042F9E8B1EE4A153008A7F6D /* Actions.sks */,
 				042F9E8D1EE4A153008A7F6D /* GameScene.swift */,
 				04D8A4F31EEC736000707AA6 /* Ball.swift */,
+				04E762E11F12B75C009C7D2B /* eCATextLayer.swift */,
 				041F29F71EF6E92B00FD01A5 /* BallManager.swift */,
 				042F9E9F1EE4A1D4008A7F6D /* Block.swift */,
 				042F9EA11EE4A1E1008A7F6D /* Grid.swift */,
@@ -160,6 +163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04E762E21F12B75C009C7D2B /* eCATextLayer.swift in Sources */,
 				04D8A4F41EEC736000707AA6 /* Ball.swift in Sources */,
 				042F9E8E1EE4A153008A7F6D /* GameScene.swift in Sources */,
 				042F9EA01EE4A1D4008A7F6D /* Block.swift in Sources */,
