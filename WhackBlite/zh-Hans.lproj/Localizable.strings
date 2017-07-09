@@ -1,0 +1,9 @@
+/* 
+  en.strings
+  WhackBlite
+
+  Created by Fumlar on 2017-07-09.
+  Copyright © 2017 Fumlar. All rights reserved.
+*/
+"highScore" = "最高分：";
+"gameHintTitle": "玩法";

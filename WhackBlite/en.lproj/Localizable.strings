@@ -1,0 +1,11 @@
+/* 
+  en.strings
+  WhackBlite
+
+  Created by Fumlar on 2017-07-09.
+  Copyright © 2017 Fumlar. All rights reserved.
+*/
+
+"highScore" = "High Score: ";
+"gameHintTitle" = "Hint";
+"gameHint" = "Tap on each block (16 in total) to rotate clockwise by 90 degrees. Tap outside of the blocks to spawn a ball. Try to rotate the blocks to make a path for each ball.";

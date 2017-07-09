@@ -58,6 +58,7 @@ class Ball: NSObject {
     var diameter: CGFloat
     var nextBlockToAccess: Block
     var directionToBlock: direction
+    var needToSumbitScore: Bool
     //test
     //var initialPos: CGPoint
     
@@ -80,6 +81,7 @@ class Ball: NSObject {
         //initialPos = initRect.origin
         nextBlockToAccess = toBlock
         directionToBlock = fromDirection
+        needToSumbitScore = true
         super.init()
         
         
@@ -133,6 +135,7 @@ class Ball: NSObject {
         scoreLabel.removeFromSuperlayer()
         layer.removeFromSuperlayer()
         borderLayer.removeFromSuperlayer()
+        needToSumbitScore = false
     }
     
     //manage movement of the ball
@@ -424,9 +427,9 @@ class Ball: NSObject {
             self.nextBlockToAccess.ballAccessCount -= 1
             print("We are posting a note with self being \(self) and next block being \(self.nextBlockToAccess)")
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "WhatIsNextBlock"), object: self, userInfo: ["currentBlock":self.nextBlockToAccess, "direction":self.directionToBlock])
-            //if self.score < 14 && !(self.nextBlockToAccess.layer.frame == CGRect.zero) {
-            //    self.incScore()
-            //} now only increase score if the ball turns
+            if self.score < 14 && !(self.nextBlockToAccess.layer.frame == CGRect.zero) {
+                self.incScore()
+            }
             self.move()
         }
         borderLayer.transform = CATransform3DTranslate(borderLayer.transform, xToMove, yToMove, 0)
