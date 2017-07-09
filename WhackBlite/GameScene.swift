@@ -58,6 +58,7 @@ class GameScene: SKScene {
     var canSpawnBall: Bool = true
     var gameInProgress: Bool = true
     var canResetGrid: Bool = true
+    var appOpenedForTheFirstTime: Bool = false
     //var testBall: Ball = Ball.init(initRect: CGRect.zero, ofType: Ball.type.randomType(), toBlock: Block.init(initRect: CGRect.zero, typeOfBlock: Block.type.randomType(), x:0, y:0), fromDirection: Ball.direction.randomDirection())
     
     override func didMove(to view: SKView) {
@@ -145,7 +146,7 @@ class GameScene: SKScene {
     }
     
     func resetTimerLabel() {
-        timeRemaining = 10
+        timeRemaining = 60
         updateTimerLabel()
     }
     
@@ -174,7 +175,7 @@ class GameScene: SKScene {
     func initLabels() {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        totalScoreLabel.frame = CGRect(x: mainGrid.grid.frame.origin.x, y: mainGrid.grid.frame.origin.y - Grid.blockSize / 2, width: Grid.blockSize / 2, height: Grid.blockSize / 2)
+        totalScoreLabel.frame = CGRect(x: mainGrid.grid.frame.origin.x - Grid.blockSize / 4, y: mainGrid.grid.frame.origin.y - Grid.blockSize / 2, width: Grid.blockSize, height: Grid.blockSize / 2)
         CATransaction.commit()
         //CATransaction.setDisableActions(true)
         resetTotalScore()
@@ -192,7 +193,7 @@ class GameScene: SKScene {
         //init timer label
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        timerLabel.frame = CGRect(x: totalScoreLabel.frame.origin.x + Grid.blockSize * 3.5, y:totalScoreLabel.frame.origin.y, width: Grid.blockSize / 2, height: Grid.blockSize / 2)
+        timerLabel.frame = CGRect(x: totalScoreLabel.frame.origin.x + Grid.blockSize * 3.7, y:totalScoreLabel.frame.origin.y, width: Grid.blockSize / 2, height: Grid.blockSize / 2)
         CATransaction.commit()
         resetTimerLabel()
         timerLabel.opacity = 1
@@ -213,6 +214,10 @@ class GameScene: SKScene {
         //score font
         highScoreLabel.font = fontStringRef
         highScoreLabel.fontSize = totalScoreLabel.fontSize
+        
+        if !appOpenedForTheFirstTime {
+            startTimer()
+        }
     }
     
     func startTimer() {

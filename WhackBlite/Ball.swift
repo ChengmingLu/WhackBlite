@@ -63,7 +63,7 @@ class Ball: NSObject {
     //var initialPos: CGPoint
     
     init(initRect: CGRect, ofType: type, toBlock: Block, fromDirection: direction) {
-        score = arc4random_uniform(3) < 2 ? 0 : -10//this makes 1/3 of -10 ball spawn
+        score = arc4random_uniform(3) < 2 ? 0 : -20//this makes 1/3 of -10 ball spawn
         ballType = ofType
         colour = ballType == type.Black ? UIColor.black.cgColor : UIColor.white.cgColor
         borderLayer = CALayer()
@@ -422,7 +422,7 @@ class Ball: NSObject {
         
         CATransaction.begin()
         CATransaction.setAnimationTimingFunction(CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear))
-        CATransaction.setAnimationDuration(3)
+        CATransaction.setAnimationDuration(2)
         CATransaction.setCompletionBlock {
             self.nextBlockToAccess.ballAccessCount -= 1
             print("We are posting a note with self being \(self) and next block being \(self.nextBlockToAccess)")
