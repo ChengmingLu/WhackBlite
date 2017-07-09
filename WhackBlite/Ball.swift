@@ -160,9 +160,9 @@ class Ball: NSObject {
                 case type.White:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
                         //getting a dummy zero rect block means we are outside the grid: return score and self destruction
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -176,9 +176,9 @@ class Ball: NSObject {
                     yToMove = lengthToMove
                 case type.White:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -189,9 +189,9 @@ class Ball: NSObject {
                 switch ballType {
                 case type.Black:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -205,9 +205,9 @@ class Ball: NSObject {
                 switch ballType {
                 case type.Black:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -224,9 +224,9 @@ class Ball: NSObject {
                 switch ballType {
                 case type.Black:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -240,9 +240,9 @@ class Ball: NSObject {
                 switch ballType {
                 case type.Black:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -259,9 +259,9 @@ class Ball: NSObject {
                     yToMove = -lengthToMove
                 case type.White:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -275,9 +275,9 @@ class Ball: NSObject {
                     yToMove = -lengthToMove
                 case type.White:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -291,9 +291,9 @@ class Ball: NSObject {
                 switch ballType {
                 case type.Black:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -310,9 +310,9 @@ class Ball: NSObject {
                     yToMove = -lengthToMove
                 case type.White:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -323,9 +323,9 @@ class Ball: NSObject {
                 switch ballType {
                 case type.Black:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -342,9 +342,9 @@ class Ball: NSObject {
                     yToMove = lengthToMove
                 case type.White:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -361,9 +361,9 @@ class Ball: NSObject {
                     yToMove = -lengthToMove
                 case type.White:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -374,9 +374,9 @@ class Ball: NSObject {
                 switch ballType {
                 case type.Black:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -393,9 +393,9 @@ class Ball: NSObject {
                     yToMove = lengthToMove
                 case type.White:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1
@@ -406,9 +406,9 @@ class Ball: NSObject {
                 switch ballType {
                 case type.Black:
                     if nextBlockToAccess.layer.frame == CGRect.zero {
-                        print("Give me score")
+                        //print("Give me score")
                     } else {
-                        print("Not accessible")
+                        //print("Not accessible")
                         //NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "penalizeScore"), object: self)
                     }
                     nextBlockToAccess.ballAccessCount -= 1

@@ -54,6 +54,7 @@ class GameScene: SKScene {
     //var testBall: Ball = Ball.init(initRect: CGRect.zero, ofType: Ball.type.randomType(), toBlock: Block.init(initRect: CGRect.zero, typeOfBlock: Block.type.randomType(), x:0, y:0), fromDirection: Ball.direction.randomDirection())
     
     override func didMove(to view: SKView) {
+        self.backgroundColor = UIColor.black
         //appOpenedForTheFirstTime = true //assume first time lauch so init label does not start timer
         initLabels()
         //add grid to view
@@ -495,7 +496,7 @@ class GameScene: SKScene {
         let direction = userInformation?.object(forKey: "direction") as! Ball.direction
         let currentblock = userInformation?.object(forKey: "currentBlock") as! Block
         let theBall = note.object as! Ball
-        print("received note in getNextBlockWithCurrentBlockIndex, current ball score \(theBall.score)")
+        //print("received note in getNextBlockWithCurrentBlockIndex, current ball score \(theBall.score)")
         switch direction {
         case Ball.direction.Top:
             switch currentblock.blockType {
@@ -503,7 +504,7 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
-                        print("Exiting TOP WBL, the ball had score \(theBall.score)")
+                        //print("Exiting TOP WBL, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -519,13 +520,14 @@ class GameScene: SKScene {
                         theBall.directionToBlock = Ball.direction.Left
                     }
                 case Ball.type.White:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 }
             case Block.type.WBR:
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.yIndex == 0) {
-                        print("Exiting TOP WBR, the ball had score \(theBall.score)")
+                        //print("Exiting TOP WBR, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -541,15 +543,17 @@ class GameScene: SKScene {
                         theBall.directionToBlock = Ball.direction.Right
                     }
                 case Ball.type.White:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 }
             case Block.type.WTL:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 case Ball.type.White:
                     if (currentblock.yIndex == 0) {
-                        print("Exiting TOP WTL, the ball had score \(theBall.score)")
+                        //print("Exiting TOP WTL, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -568,10 +572,11 @@ class GameScene: SKScene {
             case Block.type.WTR:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 case Ball.type.White:
                     if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
-                        print("Exiting TOP WTR, the ball had score \(theBall.score)")
+                        //print("Exiting TOP WTR, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -593,10 +598,11 @@ class GameScene: SKScene {
             case Block.type.WBL:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 case Ball.type.White:
                     if (currentblock.yIndex == 0) {
-                        print("Exiting BOT WBL, the ball had score \(theBall.score)")
+                        //print("Exiting BOT WBL, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -615,10 +621,11 @@ class GameScene: SKScene {
             case Block.type.WBR:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 case Ball.type.White:
                     if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
-                        print("Exiting BOT WBR, the ball had score \(theBall.score)")
+                        //print("Exiting BOT WBR, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -638,7 +645,7 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.yIndex == mainGrid.numberOfColumns - 1) {
-                        print("Exiting BOT WTL, the ball had score \(theBall.score)")
+                        //print("Exiting BOT WTL, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -654,13 +661,14 @@ class GameScene: SKScene {
                         theBall.directionToBlock = Ball.direction.Left
                     }
                 case Ball.type.White:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 }
             case Block.type.WTR:
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.yIndex == 0) {
-                        print("Exiting BOT WTR, the ball had score \(theBall.score)")
+                        //print("Exiting BOT WTR, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -676,7 +684,8 @@ class GameScene: SKScene {
                         theBall.directionToBlock = Ball.direction.Right
                     }
                 case Ball.type.White:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 }
             }
         case Ball.direction.Left:
@@ -684,10 +693,11 @@ class GameScene: SKScene {
             case Block.type.WBL:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 case Ball.type.White:
                     if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
-                        print("Exiting LEF WBL, the ball had score \(theBall.score)")
+                        //print("Exiting LEF WBL, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -706,7 +716,7 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.xIndex == 0) {
-                        print("Exiting LEF WBR, the ball had score \(theBall.score)")
+                        //print("Exiting LEF WBR, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -721,15 +731,17 @@ class GameScene: SKScene {
                         theBall.directionToBlock = Ball.direction.Bottom
                     }
                 case Ball.type.White:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 }
             case Block.type.WTL:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 case Ball.type.White:
                     if (currentblock.xIndex == 0) {
-                        print("Exiting LEF WTL, the ball had score \(theBall.score)")
+                        //print("Exiting LEF WTL, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -749,7 +761,7 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
-                        print("Exiting LEF WTR, the ball had score \(theBall.score)")
+                        //print("Exiting LEF WTR, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -764,7 +776,8 @@ class GameScene: SKScene {
                         theBall.directionToBlock = Ball.direction.Top
                     }
                 case Ball.type.White:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 }
             }
         case Ball.direction.Right:
@@ -773,7 +786,7 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.xIndex == 0) {
-                        print("Exiting RIG WBL, the ball had score \(theBall.score)")
+                        //print("Exiting RIG WBL, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -788,15 +801,17 @@ class GameScene: SKScene {
                         theBall.directionToBlock = Ball.direction.Bottom
                     }
                 case Ball.type.White:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 }
             case Block.type.WBR:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 case Ball.type.White:
                     if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
-                        print("Exiting RIG WBR, the ball had score \(theBall.score)")
+                        //print("Exiting RIG WBR, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -815,7 +830,7 @@ class GameScene: SKScene {
                 switch theBall.ballType {
                 case Ball.type.Black:
                     if (currentblock.xIndex == mainGrid.numberOfRows - 1) {
-                        print("Exiting RIG WTL, the ball had score \(theBall.score)")
+                        //print("Exiting RIG WTL, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }
@@ -830,15 +845,17 @@ class GameScene: SKScene {
                         theBall.directionToBlock = Ball.direction.Top
                     }
                 case Ball.type.White:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 }
             case Block.type.WTR:
                 switch theBall.ballType {
                 case Ball.type.Black:
-                    print("Collission with block of opposite colour")
+                    //print("Collission with block of opposite colour")
+                    break
                 case Ball.type.White:
                     if (currentblock.xIndex == 0) {
-                        print("Exiting RIG WTR, the ball had score \(theBall.score)")
+                        //print("Exiting RIG WTR, the ball had score \(theBall.score)")
                         if theBall.needToSumbitScore {
                             incTotalScore(amount: theBall.score)
                         }

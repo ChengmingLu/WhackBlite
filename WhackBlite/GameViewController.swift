@@ -5,7 +5,6 @@
 //  Created by Fumlar on 2017-06-04.
 //  Copyright © 2017 Fumlar. All rights reserved.
 //
-
 import UIKit
 import SpriteKit
 import GameplayKit
@@ -16,15 +15,26 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         
         if let view = self.view as! SKView? {
-            // Load the SKScene from 'GameScene.sks'
-            if let scene = SKScene(fileNamed: "GameScene") {
-                // Set the scale mode to scale to fit the window
-                scene.scaleMode = .aspectFill
-                
-                // Present the scene
-                view.presentScene(scene)
-            }
             
+            if (!UserDefaults.standard.bool(forKey: "appFirstLaunched")) {
+                UserDefaults.standard.set(true, forKey: "appFirstLaunched")
+                UserDefaults.standard.synchronize()
+                
+                if let scene = SKScene(fileNamed: "GameHint") {
+                    scene.scaleMode = .aspectFill
+                    view.presentScene(scene)
+                }
+                
+            } else {
+                if let scene = SKScene(fileNamed: "GameScene") {
+                    // Set the scale mode to scale to fit the window
+                    scene.scaleMode = .aspectFill
+                    
+                    // Present the scene
+                    view.presentScene(scene)
+                }
+            }
+            // Load the SKScene from 'GameScene.sks'
             view.ignoresSiblingOrder = true
             
             //view.showsFPS = true
