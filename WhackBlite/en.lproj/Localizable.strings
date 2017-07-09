@@ -8,4 +8,4 @@
 
 "highScore" = "High Score: ";
 "gameHintTitle" = "Hint";
-"gameHint" = "Tap on each block (16 in total) to rotate clockwise by 90 degrees. Tap outside of the blocks to spawn a ball. Try to rotate the blocks to make a path for each ball.";
+"gameHint" = "Tap on each block (16 in total) to rotate clockwise by 90 degrees. Tap outside of the blocks to spawn a ball that will shortly move diagnally. Try to rotate the blocks to make a path of the same colour as the ball so it can move along such path to score. If a ball encounters a block with opposite colour along its path, the ball disappears and the score is discarded. When a ball safely exits the grid (containing all the blocks), the score on that ball is added towards the total score.";

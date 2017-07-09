@@ -10,13 +10,6 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
-    
-    /*struct spawn {
-        var rowIndex:Int
-        var colIndex:Int
-        var fromDirection:Ball.direction
-    }*/
-    
     enum possibleSpawns:UInt32 {
         case TopFirst
         case TopSecond
@@ -47,8 +40,6 @@ class GameScene: SKScene {
             return possibleSpawns(rawValue: rand)!
         }
     }
-    
-    let maxBallScoreAllowed: Int = 5
     var mainGrid: Grid = Grid.init(withBlockSize: UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height ? (UIScreen.main.bounds.size.width - 40) / 4 : (UIScreen.main.bounds.size.height - 40) / 4)
     var totalScoreLabel: eCATextLayer = eCATextLayer()
     var timerLabel: eCATextLayer = eCATextLayer()
@@ -474,13 +465,8 @@ class GameScene: SKScene {
             testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[3][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][3], fromDirection: directionToSpawn)
         }
         
-        //testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: mainGrid.blocks[0][0].blockType == Block.type.WBL || mainGrid.blocks[0][0].blockType == Block.type.WBR ? Ball.type.Black : Ball.type.White, toBlock: mainGrid.blocks[0][0], fromDirection: Ball.direction.Top)
-        
-        //testBall.addLayersToView(toView: self.view!)
         testBall.addLayersToLayer(toLayer: mainGrid.grid)
         NotificationCenter.default.addObserver(self, selector: #selector(getNextBlockWithCurrentBlockIndex(note:)), name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: testBall)
-        //NotificationCenter.default.addObserver(self, selector: #selector(totalScorePenalty), name: NSNotification.Name.init(rawValue: "penalizeScore"), object: testBall)
-        //NotificationCenter
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) { 
             testBall.move()
         }
@@ -510,10 +496,9 @@ class GameScene: SKScene {
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                         //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) ||  mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
-                        //type(rawValue: (self.blockType.rawValue + 1) % type.count)!
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) ||  mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
                         theBall.directionToBlock = Ball.direction.Left
                     }
@@ -533,9 +518,9 @@ class GameScene: SKScene {
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                         //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            //theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
                         theBall.directionToBlock = Ball.direction.Right
                     }
@@ -557,9 +542,9 @@ class GameScene: SKScene {
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                         //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
                         theBall.directionToBlock = Ball.direction.Right
                     }
@@ -579,9 +564,9 @@ class GameScene: SKScene {
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                         //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
                         theBall.directionToBlock = Ball.direction.Left
                     }
@@ -604,9 +589,9 @@ class GameScene: SKScene {
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                         //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
                         theBall.directionToBlock = Ball.direction.Right
                     }
@@ -626,9 +611,9 @@ class GameScene: SKScene {
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                         //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
                         theBall.directionToBlock = Ball.direction.Left
                     }
@@ -646,9 +631,9 @@ class GameScene: SKScene {
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                         //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex + 1]
                         theBall.directionToBlock = Ball.direction.Left
                     }
@@ -668,9 +653,9 @@ class GameScene: SKScene {
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                         //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "penalizeScore"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            //theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex][currentblock.yIndex - 1]
                         theBall.directionToBlock = Ball.direction.Right
                     }
@@ -694,9 +679,9 @@ class GameScene: SKScene {
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            //theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Top
                     }
@@ -713,9 +698,9 @@ class GameScene: SKScene {
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            //theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Bottom
                     }
@@ -736,9 +721,9 @@ class GameScene: SKScene {
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Bottom
                     }
@@ -756,9 +741,9 @@ class GameScene: SKScene {
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Top
                     }
@@ -780,9 +765,9 @@ class GameScene: SKScene {
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Bottom
                     }
@@ -803,9 +788,9 @@ class GameScene: SKScene {
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Top
                     }
@@ -822,9 +807,9 @@ class GameScene: SKScene {
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex + 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Top
                     }
@@ -845,9 +830,9 @@ class GameScene: SKScene {
                         //now we should remove observer I guess
                         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init(rawValue: "WhatIsNextBlock"), object: theBall)
                     } else {
-                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
-                            //theBall.incScore() //we detected a turn
-                        }
+//                        if theBall.score < maxBallScoreAllowed && (mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 1) % Block.type.count) || mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex].blockType == Block.type(rawValue: (theBall.nextBlockToAccess.blockType.rawValue + 3) % Block.type.count)) {
+//                            theBall.incScore() //we detected a turn
+//                        }
                         theBall.nextBlockToAccess = mainGrid.blocks[currentblock.xIndex - 1][currentblock.yIndex]
                         theBall.directionToBlock = Ball.direction.Bottom
                     }

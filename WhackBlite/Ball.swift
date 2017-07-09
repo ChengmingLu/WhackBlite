@@ -47,6 +47,7 @@ class Ball: NSObject {
             return direction(rawValue: rand)!
         }
     }
+    let maxBallScoreAllowed: Int = 50
     let lengthToMove: CGFloat = Grid.blockSize / 2
     let borderOffset: CGFloat = Grid.blockSize / 50
     var score: Int
@@ -427,7 +428,7 @@ class Ball: NSObject {
             self.nextBlockToAccess.ballAccessCount -= 1
             print("We are posting a note with self being \(self) and next block being \(self.nextBlockToAccess)")
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "WhatIsNextBlock"), object: self, userInfo: ["currentBlock":self.nextBlockToAccess, "direction":self.directionToBlock])
-            if self.score < 14 && !(self.nextBlockToAccess.layer.frame == CGRect.zero) {
+            if self.score < self.maxBallScoreAllowed && !(self.nextBlockToAccess.layer.frame == CGRect.zero) {
                 self.incScore()
             }
             self.move()
