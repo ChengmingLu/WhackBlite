@@ -102,6 +102,7 @@ class GameScene: SKScene {
             canResetGrid = false //prevent the grid from being reset multiple times
             totalScoreLabel.removeFromSuperlayer()
             mainGrid.resetGridForNewGame()
+            highScoreLabel.removeFromSuperlayer()
         }
 
     }
@@ -146,7 +147,7 @@ class GameScene: SKScene {
     }
     
     func resetTimerLabel() {
-        timeRemaining = 30
+        timeRemaining = 10
         updateTimerLabel()
     }
     
@@ -157,11 +158,14 @@ class GameScene: SKScene {
     
     func handleEndGame() {
         canResetGrid = true
+        highScoreLabel.string = "dummy"
+        self.view?.layer.addSublayer(highScoreLabel)
     }
     
     func restartGame() {
         initLabels()
         gameInProgress = true
+        canResetGrid = false
     }
     
     func initLabels() {
@@ -179,7 +183,7 @@ class GameScene: SKScene {
         let systemFont = UIFont.systemFont(ofSize: 0.0)
         let fontStringRef = systemFont.fontName as CFString
         totalScoreLabel.font = fontStringRef
-        totalScoreLabel.fontSize = 20
+        totalScoreLabel.fontSize = Grid.blockSize * 0.3
         self.view?.layer.addSublayer(totalScoreLabel)
         
         //init timer label
@@ -198,6 +202,15 @@ class GameScene: SKScene {
         self.view?.layer.addSublayer(timerLabel)
         startTimer()
 
+        //semi-init
+        highScoreLabel.frame = CGRect(x: 0, y: mainGrid.grid.frame.origin.y - Grid.blockSize, width: UIScreen.main.bounds.width, height: Grid.blockSize / 2)
+        highScoreLabel.opacity = 1
+        highScoreLabel.contentsScale = UIScreen.main.scale
+        highScoreLabel.alignmentMode = kCAAlignmentCenter
+        highScoreLabel.foregroundColor = UIColor.white.cgColor
+        //score font
+        highScoreLabel.font = fontStringRef
+        highScoreLabel.fontSize = totalScoreLabel.fontSize
     }
     
     func startTimer() {
@@ -211,6 +224,7 @@ class GameScene: SKScene {
                     CATransaction.begin()
                     CATransaction.setDisableActions(true)
                     self.totalScoreLabel.frame.origin = CGPoint(x: UIScreen.main.bounds.width / 2 - self.totalScoreLabel.frame.width / 2, y: UIScreen.main.bounds.height / 2 - self.totalScoreLabel.frame.height / 2)
+                    self.totalScoreLabel.fontSize = Grid.blockSize * 0.4
                     CATransaction.commit()
                     //self.totalScoreLabel.fontSize = 30
                     self.view?.layer.addSublayer(self.totalScoreLabel)

@@ -109,22 +109,22 @@ class Block {
     
     //rotate the block 90 degrees CW and change its type upon completion
     func rotateClockwise90() {
-        canRotate = false
-        CATransaction.begin()
-        CATransaction.setCompletionBlock {
-            self.canRotate = true
-            self.blockType = Block.type(rawValue: (self.blockType.rawValue + 1) % type.count)!
+        if canRotate {
+            CATransaction.begin()
+            CATransaction.setCompletionBlock {
+                self.canRotate = true
+                self.blockType = Block.type(rawValue: (self.blockType.rawValue + 1) % type.count)!
+            }
+            layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)
+            CATransaction.commit()
         }
-        layer.transform = CATransform3DRotate(layer.transform, CGFloat(Double.pi / 2), 0, 0, 1)
-        CATransaction.commit()
+        canRotate = false
     }
     
     //this function is used by the grid to rotate its blocks to form a result screen
     func rotateToAndSetType(toType: type) {
-        canRotate = false
         CATransaction.begin()
-        CATransaction.setCompletionBlock { 
-            self.canRotate = true
+        CATransaction.setCompletionBlock {
             self.blockType = toType
         }
         switch blockType {

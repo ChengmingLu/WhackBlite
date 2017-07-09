@@ -129,6 +129,7 @@ class Ball: NSObject {
     
     //suicide
     func retire() {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init("NowYouWantToKillYourself"), object: nil)
         scoreLabel.removeFromSuperlayer()
         layer.removeFromSuperlayer()
         borderLayer.removeFromSuperlayer()
