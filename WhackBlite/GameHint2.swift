@@ -1,5 +1,5 @@
 //
-//  GameHint.swift
+//  GameHint2.swift
 //  WhackBlite
 //
 //  Created by Fumlar on 2017-07-09.
@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameHint: SKScene {
+class GameHint2: SKScene {
     
     //var hintTitle: eCATextLayer = eCATextLayer()
     var hint: eCATextLayer = eCATextLayer()
@@ -17,23 +17,6 @@ class GameHint: SKScene {
     
     override func didMove(to view: SKView) {
         self.backgroundColor = UIColor.black
-        /*let titleSize = CGSize(width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.height / 6)
-        let titleOrigin = CGPoint(x: UIScreen.main.bounds.width / 2 - titleSize.width / 2, y: 0)
-        
-        hintTitle.frame = CGRect(origin: titleOrigin, size: titleSize)
-
-        hintTitle.opacity = 1
-        hintTitle.contentsScale = UIScreen.main.scale
-        hintTitle.alignmentMode = kCAAlignmentCenter
-        hintTitle.foregroundColor = UIColor.white.cgColor
-        //font
-        let systemFont = UIFont.systemFont(ofSize: 0.0)
-        let fontStringRef = systemFont.fontName as CFString
-        hintTitle.font = fontStringRef
-        hintTitle.fontSize = UIScreen.main.bounds.width / 20
-        hintTitle.string = NSLocalizedString("gameHintTitle", comment: "")
-        
-        self.view?.layer.addSublayer(hintTitle)*/
         
         let hinteSize = CGSize(width: UIScreen.main.bounds.width * 3 / 4, height: UIScreen.main.bounds.height * 1.5)
         let hintOrigin = CGPoint(x: UIScreen.main.bounds.width / 2 - hinteSize.width / 2, y: UIScreen.main.bounds.height / 2 - hinteSize.height / 1.4)
@@ -63,12 +46,12 @@ class GameHint: SKScene {
         hint.removeFromSuperlayer()
         //hintTitle.removeFromSuperlayer()
         let transition = SKTransition.crossFade(withDuration: 1.0)
-        let nextScene = GameHint2(size: scene!.size)
+        let nextScene = GameHint3(size: scene!.size)
         nextScene.scaleMode = .aspectFill
         scene?.view?.presentScene(nextScene, transition: transition)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
     }
 }
