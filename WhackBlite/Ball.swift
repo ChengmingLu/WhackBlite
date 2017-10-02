@@ -47,6 +47,23 @@ class Ball: NSObject {
             return direction(rawValue: rand)!
         }
     }
+    
+    enum multiplier: UInt32 {
+        case positive
+        case negative
+        private static let count: multiplier.RawValue = {
+            var maxValue: UInt32 = 0
+            while let _ = multiplier(rawValue: maxValue) {
+                maxValue += 1
+            }
+            return maxValue
+        }()
+        /// This is not really random, about 1/3 of balls grow negatively
+        static func randomMultiplier() -> multiplier {
+            let rand = arc4random_uniform(count)
+            return multiplier(rawValue: rand)!
+        }
+    }
     let maxBallScoreAllowed: Int = 50
     let lengthToMove: CGFloat = Grid.blockSize / 2
     let borderOffset: CGFloat = Grid.blockSize / 50
@@ -60,11 +77,13 @@ class Ball: NSObject {
     var nextBlockToAccess: Block
     var directionToBlock: direction
     var needToSumbitScore: Bool
+    var ballMultiplier: multiplier
     //test
     //var initialPos: CGPoint
     
-    init(initRect: CGRect, ofType: type, toBlock: Block, fromDirection: direction) {
-        score = arc4random_uniform(3) < 2 ? 0 : -20//this makes 1/3 of -10 ball spawn
+    init(initRect: CGRect, ofType: type, toBlock: Block, fromDirection: direction, initialScore: Int = 0, initialMultiplier: multiplier = .positive, registerObserver: Bool = true) {
+        score = initialScore//this makes 1/3 of -10 ball spawn
+        ballMultiplier = initialMultiplier
         ballType = ofType
         colour = ballType == type.Black ? UIColor.black.cgColor : UIColor.white.cgColor
         borderLayer = CALayer()
@@ -98,8 +117,11 @@ class Ball: NSObject {
         scoreLabel.font = fontStringRef
         scoreLabel.fontSize =  initRect.size.width * 0.6 //needs to be tested
         //layer.addSublayer(scoreLabel)
-        NotificationCenter.default.addObserver(self, selector: #selector(retire), name: NSNotification.Name.init(rawValue: "NowYouWantToKillYourself"), object: nil)
+        if registerObserver {
+            NotificationCenter.default.addObserver(self, selector: #selector(retire), name: NSNotification.Name.init(rawValue: "NowYouWantToKillYourself"), object: nil)
+        }
     }
+    
     
     func addLayersToView(toView: UIView) {
         toView.layer.addSublayer(borderLayer)
@@ -107,10 +129,12 @@ class Ball: NSObject {
         toView.layer.addSublayer(scoreLabel)
     }
     
-    func addLayersToLayer(toLayer: CALayer) {
+    func addLayersToLayer(toLayer: CALayer, addScore: Bool = true) {
         toLayer.addSublayer(borderLayer)
         toLayer.addSublayer(layer)
-        toLayer.addSublayer(scoreLabel)
+        if addScore {
+            toLayer.addSublayer(scoreLabel)
+        }
     }
     
     // update score Label as the score is changed
@@ -120,7 +144,7 @@ class Ball: NSObject {
     
     //add 1 to score and update its label
     func incScore() {
-        score += 1
+        score += 1 * (ballMultiplier == .positive ? 1 : -1)
         updateScoreLabel()
     }
     
@@ -131,7 +155,7 @@ class Ball: NSObject {
     }*/
     
     //suicide
-    func retire() {
+    @objc func retire() {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init("NowYouWantToKillYourself"), object: nil)
         scoreLabel.removeFromSuperlayer()
         layer.removeFromSuperlayer()

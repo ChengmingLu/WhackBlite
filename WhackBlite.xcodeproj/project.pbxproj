@@ -20,13 +20,8 @@
 		043B316D1F12C62F008708B1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 043B316F1F12C62F008708B1 /* Localizable.strings */; };
 		043B31731F12E201008708B1 /* GameHint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043B31721F12E201008708B1 /* GameHint.swift */; };
 		043B31751F12E233008708B1 /* GameHint.sks in Resources */ = {isa = PBXBuildFile; fileRef = 043B31741F12E233008708B1 /* GameHint.sks */; };
-		04B585481F1AF25500A32C6C /* GameHint2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 04B585471F1AF25500A32C6C /* GameHint2.sks */; };
-		04B5854A1F1AF26300A32C6C /* GameHint2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B585491F1AF26300A32C6C /* GameHint2.swift */; };
-		04B5854C1F1AF27000A32C6C /* GameHint3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B5854B1F1AF27000A32C6C /* GameHint3.swift */; };
-		04B5854E1F1AF27D00A32C6C /* GameHint4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B5854D1F1AF27D00A32C6C /* GameHint4.swift */; };
-		04B585501F1AF29600A32C6C /* GameHint3.sks in Resources */ = {isa = PBXBuildFile; fileRef = 04B5854F1F1AF29600A32C6C /* GameHint3.sks */; };
-		04B585531F1AF2AE00A32C6C /* GameHint4.sks in Resources */ = {isa = PBXBuildFile; fileRef = 04B585521F1AF2AE00A32C6C /* GameHint4.sks */; };
-		04B585551F1AF47E00A32C6C /* Arrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B585541F1AF47E00A32C6C /* Arrow.swift */; };
+		045FE6651F2D5C18008A4656 /* GCLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045FE6641F2D5C18008A4656 /* GCLogo.swift */; };
+		04C0CE2D1F2EA96D009B58C9 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C0CE2C1F2EA96D009B58C9 /* GameKit.framework */; };
 		04C8AC041F13155D0041152E /* Lacuchscreen1242-2208.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C8AC031F13155D0041152E /* Lacuchscreen1242-2208.png */; };
 		04D8A4F41EEC736000707AA6 /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D8A4F31EEC736000707AA6 /* Ball.swift */; };
 		04E762E21F12B75C009C7D2B /* eCATextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E762E11F12B75C009C7D2B /* eCATextLayer.swift */; };
@@ -51,13 +46,8 @@
 		043B31711F12C66A008708B1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		043B31721F12E201008708B1 /* GameHint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameHint.swift; sourceTree = "<group>"; };
 		043B31741F12E233008708B1 /* GameHint.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameHint.sks; sourceTree = "<group>"; };
-		04B585471F1AF25500A32C6C /* GameHint2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameHint2.sks; sourceTree = "<group>"; };
-		04B585491F1AF26300A32C6C /* GameHint2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameHint2.swift; sourceTree = "<group>"; };
-		04B5854B1F1AF27000A32C6C /* GameHint3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameHint3.swift; sourceTree = "<group>"; };
-		04B5854D1F1AF27D00A32C6C /* GameHint4.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameHint4.swift; sourceTree = "<group>"; };
-		04B5854F1F1AF29600A32C6C /* GameHint3.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameHint3.sks; sourceTree = "<group>"; };
-		04B585521F1AF2AE00A32C6C /* GameHint4.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameHint4.sks; sourceTree = "<group>"; };
-		04B585541F1AF47E00A32C6C /* Arrow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrow.swift; sourceTree = "<group>"; };
+		045FE6641F2D5C18008A4656 /* GCLogo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCLogo.swift; sourceTree = "<group>"; };
+		04C0CE2C1F2EA96D009B58C9 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		04C8AC031F13155D0041152E /* Lacuchscreen1242-2208.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lacuchscreen1242-2208.png"; sourceTree = "<group>"; };
 		04D8A4F31EEC736000707AA6 /* Ball.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
 		04E762E11F12B75C009C7D2B /* eCATextLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = eCATextLayer.swift; sourceTree = "<group>"; };
@@ -68,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04C0CE2D1F2EA96D009B58C9 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +70,7 @@
 			children = (
 				042F9E861EE4A153008A7F6D /* WhackBlite */,
 				042F9E851EE4A153008A7F6D /* Products */,
+				04C0CE291F2EA917009B58C9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,13 +91,7 @@
 				042F9E8D1EE4A153008A7F6D /* GameScene.swift */,
 				043B31741F12E233008708B1 /* GameHint.sks */,
 				043B31721F12E201008708B1 /* GameHint.swift */,
-				04B585471F1AF25500A32C6C /* GameHint2.sks */,
-				04B585491F1AF26300A32C6C /* GameHint2.swift */,
-				04B5854F1F1AF29600A32C6C /* GameHint3.sks */,
-				04B5854B1F1AF27000A32C6C /* GameHint3.swift */,
-				04B585541F1AF47E00A32C6C /* Arrow.swift */,
-				04B585521F1AF2AE00A32C6C /* GameHint4.sks */,
-				04B5854D1F1AF27D00A32C6C /* GameHint4.swift */,
+				045FE6641F2D5C18008A4656 /* GCLogo.swift */,
 				04D8A4F31EEC736000707AA6 /* Ball.swift */,
 				04E762E11F12B75C009C7D2B /* eCATextLayer.swift */,
 				041F29F71EF6E92B00FD01A5 /* BallManager.swift */,
@@ -119,6 +105,14 @@
 				04C8AC031F13155D0041152E /* Lacuchscreen1242-2208.png */,
 			);
 			path = WhackBlite;
+			sourceTree = "<group>";
+		};
+		04C0CE291F2EA917009B58C9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				04C0CE2C1F2EA96D009B58C9 /* GameKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,13 +142,19 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = Fumlar;
 				TargetAttributes = {
 					042F9E831EE4A153008A7F6D = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = DX2Q72UENJ;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -184,14 +184,11 @@
 			files = (
 				043B31751F12E233008708B1 /* GameHint.sks in Resources */,
 				042F9E931EE4A153008A7F6D /* Main.storyboard in Resources */,
-				04B585501F1AF29600A32C6C /* GameHint3.sks in Resources */,
 				042F9E8A1EE4A153008A7F6D /* GameScene.sks in Resources */,
-				04B585481F1AF25500A32C6C /* GameHint2.sks in Resources */,
 				043B316D1F12C62F008708B1 /* Localizable.strings in Resources */,
 				04C8AC041F13155D0041152E /* Lacuchscreen1242-2208.png in Resources */,
 				042F9E951EE4A153008A7F6D /* Assets.xcassets in Resources */,
 				042F9E981EE4A153008A7F6D /* LaunchScreen.storyboard in Resources */,
-				04B585531F1AF2AE00A32C6C /* GameHint4.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,19 +199,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04B5854C1F1AF27000A32C6C /* GameHint3.swift in Sources */,
 				04E762E21F12B75C009C7D2B /* eCATextLayer.swift in Sources */,
 				043B31731F12E201008708B1 /* GameHint.swift in Sources */,
 				04D8A4F41EEC736000707AA6 /* Ball.swift in Sources */,
 				042F9E8E1EE4A153008A7F6D /* GameScene.swift in Sources */,
 				042F9EA01EE4A1D4008A7F6D /* Block.swift in Sources */,
-				04B5854A1F1AF26300A32C6C /* GameHint2.swift in Sources */,
-				04B5854E1F1AF27D00A32C6C /* GameHint4.swift in Sources */,
+				045FE6651F2D5C18008A4656 /* GCLogo.swift in Sources */,
 				042F9E901EE4A153008A7F6D /* GameViewController.swift in Sources */,
 				041F29F81EF6E92B00FD01A5 /* BallManager.swift in Sources */,
 				042F9EA21EE4A1E1008A7F6D /* Grid.swift in Sources */,
 				042F9E881EE4A153008A7F6D /* AppDelegate.swift in Sources */,
-				04B585551F1AF47E00A32C6C /* Arrow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,7 +256,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -270,7 +266,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -314,7 +314,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -322,7 +324,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -359,7 +365,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fulmar.WhackBlite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -375,7 +382,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fulmar.WhackBlite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

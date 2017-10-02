@@ -8,8 +8,9 @@
 
 import SpriteKit
 import GameplayKit
+import GameKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, GKGameCenterControllerDelegate {
     enum possibleSpawns:UInt32 {
         case TopFirst
         case TopSecond
@@ -41,10 +42,13 @@ class GameScene: SKScene {
         }
     }
     //var parentVC = UIApplication.shared.keyWindow?.rootViewController
-    var mainGrid: Grid = Grid.init(withBlockSize: UIScreen.main.bounds.size.width < UIScreen.main.bounds.size.height ? (UIScreen.main.bounds.size.width - 40) / 4 : (UIScreen.main.bounds.size.height - 40) / 4)
+    var mainGrid: Grid = Grid.init(withBlockSize: (UIScreen.main.bounds.size.width - 40) / 4)
     var totalScoreLabel: eCATextLayer = eCATextLayer()
     var timerLabel: eCATextLayer = eCATextLayer()
     var highScoreLabel: eCATextLayer = eCATextLayer()
+    var restartLabel: eCATextLayer = eCATextLayer()
+    var tutLabel: eCATextLayer = eCATextLayer()
+    var gcLabel: GCLogo = GCLogo()
     var totalScore: Int = 0
     var timeRemaining: Int = 60
     var canSpawnBall: Bool = true
@@ -61,24 +65,7 @@ class GameScene: SKScene {
         mainGrid.addGridToView(toView: self.view!)
         NotificationCenter.default.addObserver(self, selector: #selector(handleEndGame), name: NSNotification.Name.init(rawValue: "GridFinishedAnimation"), object: mainGrid)
         NotificationCenter.default.addObserver(self, selector: #selector(restartGame), name: NSNotification.Name.init(rawValue: "GridFinishedReset"), object: mainGrid)
-/*
-         
-         if (!UserDefaults.standard.bool(forKey: "appFirstLaunched")) {
-         UserDefaults.standard.set(true, forKey: "appFirstLaunched")
-         UserDefaults.standard.synchronize()
-         
-         let alertViewtitle = NSLocalizedString("gameHintTitle", comment: "")
-         let alertViewMessage = NSLocalizedString("gameHint", comment: "")
-         let alertViewButtonTitle = NSLocalizedString("okButton", comment: "")
-         let alertView = UIAlertController.init(title: alertViewtitle, message: alertViewMessage, preferredStyle: UIAlertControllerStyle.alert)
-         let actionButon = UIAlertAction.init(title: alertViewButtonTitle, style: UIAlertActionStyle.default, handler: { (UIAlertAction) in
-         self.startTimer()
-         })
-         alertView.addAction(actionButon)
-         parentVC?.present(alertView, animated: true, completion: nil)
-         
-         }
-         */
+
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         //NSLog("GS: touched began")
@@ -108,13 +95,39 @@ class GameScene: SKScene {
                 canSpawnBall = false
             }
             //add a ball whenever we touch somewhere else
-        } else if canResetGrid {
-            canResetGrid = false //prevent the grid from being reset multiple times
-            totalScoreLabel.removeFromSuperlayer()
-            mainGrid.resetGridForNewGame()
-            highScoreLabel.removeFromSuperlayer()
-        }
+        } else {
+            let squareLength = Grid.blockSize * sqrt(2)
+            let restartFrame: CGRect = CGRect.init(x: (UIScreen.main.bounds.width - squareLength * 3) / 2, y: (UIScreen.main.bounds.height - squareLength) / 2, width: squareLength, height: squareLength)
+            let gcFrame = CGRect.init(x: restartFrame.origin.x + squareLength, y: restartFrame.origin.y + squareLength, width: squareLength, height: squareLength)
+            let tutFrame = CGRect.init(x: restartFrame.origin.x + squareLength * 2, y: restartFrame.origin.y, width: squareLength, height: squareLength)
 
+            if canResetGrid { // This means the game has come to a state where it is awaiting further instructions
+                if restartFrame.contains(touchLocation!) {
+                    canResetGrid = false //prevent the grid from being reset multiple times
+                    totalScoreLabel.removeFromSuperlayer()
+                    mainGrid.resetGridForNewGame()
+                    highScoreLabel.removeFromSuperlayer()
+                    gcLabel.removeFromSuperlayer()
+                    restartLabel.removeFromSuperlayer()
+                    tutLabel.removeFromSuperlayer()
+                } else if gcFrame.contains(touchLocation!) {
+                    //print("shit gc")
+                    showLeader()
+                } else if tutFrame.contains(touchLocation!) {
+                    mainGrid.grid.removeFromSuperlayer()
+                    highScoreLabel.removeFromSuperlayer()
+                    totalScoreLabel.removeFromSuperlayer()
+                    timerLabel.removeFromSuperlayer()
+                    gcLabel.removeFromSuperlayer()
+                    restartLabel.removeFromSuperlayer()
+                    tutLabel.removeFromSuperlayer()
+                    let transition = SKTransition.crossFade(withDuration: 1.0)
+                    let nextScene = GameHint(size: scene!.size)
+                    nextScene.scaleMode = .aspectFill
+                    scene?.view?.presentScene(nextScene, transition: transition)
+                }
+            }
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -166,18 +179,24 @@ class GameScene: SKScene {
         updateTimerLabel()
     }
     
-    func handleEndGame() {
+    @objc func handleEndGame() {
         canResetGrid = true
         var highScore = 0
         if (totalScore > UserDefaults.standard.integer(forKey: "highScore")) {
             highScore = totalScore
             UserDefaults.standard.set(highScore, forKey: "highScore")
+            saveHighscore(gameScore: highScore)
         }
-        highScoreLabel.string = NSLocalizedString("highScore", comment: "") + "\(UserDefaults.standard.integer(forKey: "highScore"))"
+        highScoreLabel.string = NSLocalizedString("highScore", comment: "") + "\n" + "\(UserDefaults.standard.integer(forKey: "highScore"))"
+        //highScoreLabel.string = "ss"
+        
+        self.view?.layer.addSublayer(tutLabel)
+        self.view?.layer.addSublayer(restartLabel)
+        self.view?.layer.addSublayer(gcLabel)
         self.view?.layer.addSublayer(highScoreLabel)
     }
     
-    func restartGame() {
+    @objc func restartGame() {
         initLabels()
         gameInProgress = true
         canResetGrid = false
@@ -216,15 +235,46 @@ class GameScene: SKScene {
         timerLabel.fontSize = totalScoreLabel.fontSize
         self.view?.layer.addSublayer(timerLabel)
 
+        let squareLength = Grid.blockSize * sqrt(2)
+        
+        let restartFrame: CGRect = CGRect.init(x: (UIScreen.main.bounds.width - squareLength * 3) / 2, y: (UIScreen.main.bounds.height - squareLength) / 2, width: squareLength, height: squareLength)
+        let gcFrame = CGRect.init(x: restartFrame.origin.x + squareLength, y: restartFrame.origin.y + squareLength, width: squareLength, height: squareLength)
+        let tutFrame = CGRect.init(x: restartFrame.origin.x + squareLength * 2, y: restartFrame.origin.y, width: squareLength, height: squareLength)
+        let highScoreFrame = CGRect.init(x: restartFrame.origin.x + squareLength, y: restartFrame.origin.y - squareLength, width: squareLength, height: squareLength)
         //semi-init
-        highScoreLabel.frame = CGRect(x: 0, y: mainGrid.grid.frame.origin.y - Grid.blockSize, width: UIScreen.main.bounds.width, height: Grid.blockSize / 2)
+        highScoreLabel.frame = highScoreFrame
         highScoreLabel.opacity = 1
         highScoreLabel.contentsScale = UIScreen.main.scale
         highScoreLabel.alignmentMode = kCAAlignmentCenter
-        highScoreLabel.foregroundColor = UIColor.white.cgColor
+        highScoreLabel.foregroundColor = UIColor.black.cgColor
         //score font
         highScoreLabel.font = fontStringRef
-        highScoreLabel.fontSize = totalScoreLabel.fontSize
+        highScoreLabel.fontSize = totalScoreLabel.fontSize - 5
+        
+        
+        tutLabel.frame = tutFrame
+        tutLabel.opacity = 1
+        tutLabel.contentsScale = UIScreen.main.scale
+        tutLabel.alignmentMode = kCAAlignmentCenter
+        tutLabel.foregroundColor = UIColor.black.cgColor
+        tutLabel.font = fontStringRef
+        tutLabel.fontSize = totalScoreLabel.fontSize * 2
+        tutLabel.string = "?"
+        
+        restartLabel.frame = restartFrame
+        restartLabel.opacity = 1
+        restartLabel.contentsScale = UIScreen.main.scale
+        restartLabel.alignmentMode = kCAAlignmentCenter
+        restartLabel.foregroundColor = UIColor.black.cgColor
+        restartLabel.font = fontStringRef
+        restartLabel.fontSize = totalScoreLabel.fontSize * 2
+        restartLabel.string = "↺"
+        
+        gcLabel.frame = gcFrame
+        gcLabel.opacity = 1
+        gcLabel.contentsScale = UIScreen.main.scale
+        
+        
         startTimer()
     }
     
@@ -256,11 +306,11 @@ class GameScene: SKScene {
         self.run(repeatedAction, withKey: "TimerAction")
     }
     
-    func spawnAndStartBall() -> Bool {
+    func spawnAndStartBall(spawn: possibleSpawns = possibleSpawns.randomSpawn()) -> Bool {
         //testing
         var testBall: Ball
         let ballDiameter = Grid.blockSize / 3 //did not use radius since height and width need whole diameter
-        let positionToSpawn = possibleSpawns.randomSpawn()
+        let positionToSpawn = spawn
         var directionToSpawn: Ball.direction
         var ballTypeToSpawn: Ball.type
         switch positionToSpawn {
@@ -282,7 +332,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Top
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][0], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][0], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.TopSecond:
             if (mainGrid.blocks[0][1].blockType == Block.type.WBL || mainGrid.blocks[0][1].blockType == Block.type.WBR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -290,7 +340,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Top
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][1].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][1].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][1], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][1].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][1].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][1], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.TopThird:
             if (mainGrid.blocks[0][2].blockType == Block.type.WBL || mainGrid.blocks[0][2].blockType == Block.type.WBR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -298,7 +348,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Top
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][2].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][2].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][2], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][2].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][2].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][2], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.TopFourth:
             /*if (mainGrid.blocks[0][3].blockType == Block.type.WBL || mainGrid.blocks[0][3].blockType == Block.type.WBR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -317,7 +367,7 @@ class GameScene: SKScene {
                 return false
             }
             directionToSpawn = Ball.direction.Top
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][3].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][3].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][3], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][3].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[0][3].layer.frame.origin.y - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][3], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.LeftFirst:
             /*if (mainGrid.blocks[0][0].blockType == Block.type.WBR || mainGrid.blocks[0][0].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -336,7 +386,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.Black
             }
             directionToSpawn = Ball.direction.Left
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][0], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[0][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][0], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.LeftSecond:
             if (mainGrid.blocks[1][0].blockType == Block.type.WBR || mainGrid.blocks[1][0].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -344,7 +394,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Left
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[1][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[1][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[1][0], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[1][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[1][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[1][0], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.LeftThird:
             if (mainGrid.blocks[2][0].blockType == Block.type.WBR || mainGrid.blocks[2][0].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -352,7 +402,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Left
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[2][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[2][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[2][0], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[2][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[2][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[2][0], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.LeftFourth:
             /*if (mainGrid.blocks[3][0].blockType == Block.type.WBR || mainGrid.blocks[3][0].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -371,7 +421,7 @@ class GameScene: SKScene {
                 return false
             }
             directionToSpawn = Ball.direction.Left
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[3][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][0], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][0].layer.frame.origin.x - ballDiameter / 2, y:mainGrid.blocks[3][0].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][0], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.BottomFirst:
             /*if (mainGrid.blocks[3][0].blockType == Block.type.WTL || mainGrid.blocks[3][0].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -390,7 +440,7 @@ class GameScene: SKScene {
                 return false
             }
             directionToSpawn = Ball.direction.Bottom
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][0].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][0], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][0].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][0].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][0], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.BottomSecond:
             if (mainGrid.blocks[3][1].blockType == Block.type.WTL || mainGrid.blocks[3][1].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -398,7 +448,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Bottom
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][1].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][1].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][1], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][1].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][1].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][1], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.BottomThird:
             if (mainGrid.blocks[3][2].blockType == Block.type.WTL || mainGrid.blocks[3][2].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -406,7 +456,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Bottom
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][2].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][2].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][2], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][2].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][2].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][2], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.BottomFourth:
             /*if (mainGrid.blocks[3][3].blockType == Block.type.WTL || mainGrid.blocks[3][3].blockType == Block.type.WTR) {
                 ballTypeToSpawn = Ball.type.Black
@@ -425,7 +475,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.Black
             }
             directionToSpawn = Ball.direction.Bottom
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][3].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][3].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][3], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][3].layer.frame.origin.x + Grid.blockSize / 2 - ballDiameter / 2, y:mainGrid.blocks[3][3].layer.frame.origin.y + Grid.blockSize - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][3], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.RightFirst:
             /*if (mainGrid.blocks[0][3].blockType == Block.type.WTL || mainGrid.blocks[0][3].blockType == Block.type.WBL) {
                 ballTypeToSpawn = Ball.type.Black
@@ -444,7 +494,7 @@ class GameScene: SKScene {
                 return false
             }
             directionToSpawn = Ball.direction.Right
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[0][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][3], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[0][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[0][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[0][3], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.RightSecond:
             if (mainGrid.blocks[1][3].blockType == Block.type.WTL || mainGrid.blocks[1][3].blockType == Block.type.WBL) {
                 ballTypeToSpawn = Ball.type.Black
@@ -452,7 +502,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Right
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[1][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[1][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[1][3], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[1][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[1][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[1][3], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.RightThird:
             if (mainGrid.blocks[2][3].blockType == Block.type.WTL || mainGrid.blocks[2][3].blockType == Block.type.WBL) {
                 ballTypeToSpawn = Ball.type.Black
@@ -460,7 +510,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Right
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[2][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[2][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[2][3], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[2][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[2][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[2][3], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         case possibleSpawns.RightFourth:
             /*if (mainGrid.blocks[3][3].blockType == Block.type.WTL || mainGrid.blocks[3][3].blockType == Block.type.WBL) {
                 ballTypeToSpawn = Ball.type.Black
@@ -479,7 +529,7 @@ class GameScene: SKScene {
                 ballTypeToSpawn = Ball.type.White
             }
             directionToSpawn = Ball.direction.Right
-            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[3][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][3], fromDirection: directionToSpawn)
+            testBall = Ball.init(initRect: CGRect(x:mainGrid.blocks[3][3].layer.frame.origin.x + Grid.blockSize - ballDiameter / 2, y:mainGrid.blocks[3][3].layer.frame.origin.y + Grid.blockSize / 2 - ballDiameter / 2, width:ballDiameter, height:ballDiameter), ofType: ballTypeToSpawn, toBlock: mainGrid.blocks[3][3], fromDirection: directionToSpawn, initialMultiplier: .randomMultiplier())
         }
         
         testBall.addLayersToLayer(toLayer: mainGrid.grid)
@@ -491,7 +541,7 @@ class GameScene: SKScene {
     }
     
     //it also handles ball scoring by comparing when the nextBlock will cause the ball to turn
-    func getNextBlockWithCurrentBlockIndex(note: Notification) {
+    @objc func getNextBlockWithCurrentBlockIndex(note: Notification) {
         let userInformation = note.userInfo as NSDictionary?
         let direction = userInformation?.object(forKey: "direction") as! Ball.direction
         let currentblock = userInformation?.object(forKey: "currentBlock") as! Block
@@ -876,5 +926,36 @@ class GameScene: SKScene {
     
     func canBlockRotate(theBlock: Block) -> Bool {
         return theBlock.ballAccessCount == 0 ? true : false
+    }
+    
+    func showLeader() {
+        let viewControllerVar = self.view?.window?.rootViewController
+        let gKGCViewController = GKGameCenterViewController()
+        gKGCViewController.gameCenterDelegate = self
+        //viewControllerVar?.presentViewController(gKGCViewController, animated: true, completion: nil)
+        viewControllerVar?.present(gKGCViewController, animated: true, completion: nil)
+    }
+    func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
+        //gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+        gameCenterViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    //sends the highest score to leaderboard
+    func saveHighscore(gameScore: Int) {
+        
+        print("Player has been authenticated.")
+        
+        if GKLocalPlayer.localPlayer().isAuthenticated {
+            
+            let scoreReporter = GKScore(leaderboardIdentifier: "WhackBliteLead")
+            scoreReporter.value = Int64(gameScore)
+            let scoreArray: [GKScore] = [scoreReporter]
+            
+            GKScore.report(scoreArray, withCompletionHandler: { (error) in
+                if error != nil {
+                    print("An error has occured: \(String(describing: error))")
+                }
+            })
+        }
     }
 }

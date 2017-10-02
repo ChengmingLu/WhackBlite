@@ -8,5 +8,10 @@
 
 "highScore" = "High Score: ";
 //"gameHintTitle" = "Hint";
-"gameHint" = "Hint\n\nTap on each block (16 in total) to rotate clockwise by 90 degrees. Tap outside of the blocks to spawn a ball that will shortly move diagnally. Try to rotate the blocks to make a path of the same colour as the ball so it can move along such path to score. If a ball encounters a block with opposite colour along its path, the ball disappears and the score is discarded. When a ball safely exits the grid (containing all the blocks), the score on that ball is added towards the total score. Try not to let balls with negative starting score flee!";
+"gameHintTitle" = "Hint";
+"gameHint" = "Hint\n\nTap on each block (16 in total) to rotate clockwise by 90 degrees.";
+"gameHint2" = "We have made a path for you by rotating some blocks. Just tap outside of the blocks to spawn a ball and see what happens.";
+"gameHint2-1" = "As you can see, the ball has a score label attached to it, and the score will increase as the ball travels along the path, eventually adding to the total score as the ball exits safely";
+"gameHint3" = "Note that a ball will disappear if its path is no longer available, losing its score. Also in actual gameplay, there will be balls that grow negative scores. Try to prevent them from exiting all the blocks. Good luck!";
+
 //"okButton" = "OK";

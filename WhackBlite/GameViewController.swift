@@ -8,12 +8,14 @@
 import UIKit
 import SpriteKit
 import GameplayKit
+import GameKit
 
 class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        authenticateLocalPlayer()
+        //NotificationCenter.default.addObserver(self, selector: <#T##Selector#>, name: <#T##NSNotification.Name?#>, object: <#T##Any?#>)
         if let view = self.view as! SKView? {
             
             if (!UserDefaults.standard.bool(forKey: "appFirstLaunched")) {
@@ -29,7 +31,7 @@ class GameViewController: UIViewController {
                 if let scene = SKScene(fileNamed: "GameScene") {
                     // Set the scale mode to scale to fit the window
                     scene.scaleMode = .aspectFill
-                    
+            
                     // Present the scene
                     view.presentScene(scene)
                 }
@@ -42,6 +44,20 @@ class GameViewController: UIViewController {
         }
     }
 
+    func authenticateLocalPlayer() {
+        let localPlayer = GKLocalPlayer.localPlayer()
+        localPlayer.authenticateHandler = {(viewController, error) -> Void in
+            
+            if (viewController != nil) {
+                //self.presentViewController(viewController!, animated: true, completion: nil)
+                self.present(viewController!, animated: true, completion: nil)
+            }
+            else {
+                print((GKLocalPlayer.localPlayer().isAuthenticated))
+            }
+        }
+    }
+    
     override var shouldAutorotate: Bool {
         return true
     }
@@ -61,5 +77,10 @@ class GameViewController: UIViewController {
 
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        super.viewWillDisappear(animated)
     }
 }
