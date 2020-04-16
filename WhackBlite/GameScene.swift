@@ -166,7 +166,7 @@ class GameScene: SKScene {
         updateTimerLabel()
     }
     
-    func handleEndGame() {
+    @objc func handleEndGame() {
         canResetGrid = true
         var highScore = 0
         if (totalScore > UserDefaults.standard.integer(forKey: "highScore")) {
@@ -177,7 +177,7 @@ class GameScene: SKScene {
         self.view?.layer.addSublayer(highScoreLabel)
     }
     
-    func restartGame() {
+    @objc func restartGame() {
         initLabels()
         gameInProgress = true
         canResetGrid = false
@@ -192,7 +192,7 @@ class GameScene: SKScene {
         resetTotalScore()
         totalScoreLabel.opacity = 1
         totalScoreLabel.contentsScale = UIScreen.main.scale
-        totalScoreLabel.alignmentMode = kCAAlignmentCenter
+        totalScoreLabel.alignmentMode = CATextLayerAlignmentMode.center
         totalScoreLabel.foregroundColor = UIColor.white.cgColor
         //font
         let systemFont = UIFont.systemFont(ofSize: 0.0)
@@ -209,7 +209,7 @@ class GameScene: SKScene {
         resetTimerLabel()
         timerLabel.opacity = 1
         timerLabel.contentsScale = UIScreen.main.scale
-        timerLabel.alignmentMode = kCAAlignmentCenter
+        timerLabel.alignmentMode = CATextLayerAlignmentMode.center
         timerLabel.foregroundColor = UIColor.white.cgColor
         //timer font
         timerLabel.font = fontStringRef
@@ -220,7 +220,7 @@ class GameScene: SKScene {
         highScoreLabel.frame = CGRect(x: 0, y: mainGrid.grid.frame.origin.y - Grid.blockSize, width: UIScreen.main.bounds.width, height: Grid.blockSize / 2)
         highScoreLabel.opacity = 1
         highScoreLabel.contentsScale = UIScreen.main.scale
-        highScoreLabel.alignmentMode = kCAAlignmentCenter
+        highScoreLabel.alignmentMode = CATextLayerAlignmentMode.center
         highScoreLabel.foregroundColor = UIColor.white.cgColor
         //score font
         highScoreLabel.font = fontStringRef
@@ -491,7 +491,7 @@ class GameScene: SKScene {
     }
     
     //it also handles ball scoring by comparing when the nextBlock will cause the ball to turn
-    func getNextBlockWithCurrentBlockIndex(note: Notification) {
+    @objc func getNextBlockWithCurrentBlockIndex(note: Notification) {
         let userInformation = note.userInfo as NSDictionary?
         let direction = userInformation?.object(forKey: "direction") as! Ball.direction
         let currentblock = userInformation?.object(forKey: "currentBlock") as! Block

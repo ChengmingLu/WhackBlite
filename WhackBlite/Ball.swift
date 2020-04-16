@@ -90,7 +90,7 @@ class Ball: NSObject {
         //resetScore()
         scoreLabel.string = "\(score)"
         scoreLabel.contentsScale = UIScreen.main.scale
-        scoreLabel.alignmentMode = kCAAlignmentCenter
+        scoreLabel.alignmentMode = CATextLayerAlignmentMode.center
         scoreLabel.foregroundColor = ballType == type.Black ? UIColor.white.cgColor : UIColor.black.cgColor
         //setting font
         let systemFont = UIFont.systemFont(ofSize: 0.0) //size is unimportant here
@@ -131,7 +131,7 @@ class Ball: NSObject {
     }*/
     
     //suicide
-    func retire() {
+    @objc func retire() {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.init("NowYouWantToKillYourself"), object: nil)
         scoreLabel.removeFromSuperlayer()
         layer.removeFromSuperlayer()
@@ -422,7 +422,7 @@ class Ball: NSObject {
         }
         
         CATransaction.begin()
-        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear))
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction.init(name: CAMediaTimingFunctionName.linear))
         CATransaction.setAnimationDuration(2)
         CATransaction.setCompletionBlock {
             self.nextBlockToAccess.ballAccessCount -= 1

@@ -42,7 +42,7 @@ class GameHint: SKScene {
         
         hint.opacity = 1
         hint.contentsScale = UIScreen.main.scale
-        hint.alignmentMode = kCAAlignmentCenter
+        hint.alignmentMode = CATextLayerAlignmentMode.center
         hint.foregroundColor = UIColor.white.cgColor
         //font
         let systemFont = UIFont.systemFont(ofSize: 0.0)
